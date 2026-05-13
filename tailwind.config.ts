@@ -10,8 +10,9 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        body: ['Inter', 'sans-serif'],
-        headline: ['Inter', 'sans-serif'],
+        body: ['PT Sans', 'sans-serif'],
+        headline: ['Playfair Display', 'serif'],
+        accent: ['Montserrat', 'sans-serif'],
         code: ['monospace'],
       },
       colors: {
@@ -88,10 +89,20 @@ export default {
             height: '0',
           },
         },
+        'fade-up': {
+          '0%': { opacity: '0', transform: 'translateY(20px)' },
+          '100%': { opacity: '1', transform: 'translateY(0)' },
+        },
+        'logo-reveal': {
+          '0%': { opacity: '0', transform: 'scale(0.8) translateY(10px)' },
+          '100%': { opacity: '1', transform: 'scale(1) translateY(0)' },
+        }
       },
       animation: {
         'accordion-down': 'accordion-down 0.2s ease-out',
         'accordion-up': 'accordion-up 0.2s ease-out',
+        'fade-up': 'fade-up 0.6s ease-out forwards',
+        'logo-reveal': 'logo-reveal 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards',
       },
     },
   },
