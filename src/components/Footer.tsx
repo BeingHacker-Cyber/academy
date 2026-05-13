@@ -93,8 +93,8 @@ export default function Footer() {
             &copy; {new Date().getFullYear()} AECS Academy (Academy for Excellence in Cambridge Studies). All rights reserved.
           </p>
           <div className="flex gap-6 text-xs text-secondary-foreground/50">
-            <Link href="#" className="hover:text-white transition-colors">Privacy Policy</Link>
-            <Link href="#" className="hover:text-white transition-colors">Terms of Service</Link>
+            <Link href="/privacy-policy" className="hover:text-white transition-colors">Privacy Policy</Link>
+            <Link href="/terms-and-conditions" className="hover:text-white transition-colors">Terms of Service</Link>
           </div>
         </div>
       </div>
