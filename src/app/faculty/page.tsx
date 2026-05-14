@@ -1,201 +1,201 @@
 "use client";
-
 import React, { useState } from 'react';
 import Image from 'next/image';
-import { Card, CardContent } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { GraduationCap, BookOpen } from 'lucide-react';
+import Link from 'next/link';
+import { GraduationCap, BookOpen, ArrowRight } from 'lucide-react';
 import { PlaceHolderImages } from '@/app/lib/placeholder-images';
 
-const filterCategories = ['All', 'Mathematics', 'Sciences', 'English', 'Business', 'Social Studies'];
+const filters = ['All', 'Mathematics', 'Sciences', 'English', 'Business', 'Social Studies'];
 
 const faculty = [
-  {
-    name: 'Sir Ahmed Hassan',
-    subject: 'Mathematics & Additional Maths',
-    category: 'Mathematics',
-    qualification: 'M.Phil Mathematics (UET Lahore)',
-    bio: 'With over 12 years of O-Level coaching, Sir Ahmed makes Additional Mathematics intuitive and approachable, achieving 90%+ A grades consistently.',
-    avatar: 'AH',
-    image: PlaceHolderImages.find(i => i.id === 'faculty-1')?.imageUrl,
-  },
-  {
-    name: 'Ms. Sarah Khan',
-    subject: 'English Language & Literature',
-    category: 'English',
-    qualification: 'MA English (PU), CELTA Certified',
-    bio: 'Focusing on creative writing and critical analysis, Ms. Sarah has helped 90% of her students achieve A* in Cambridge English examinations.',
-    avatar: 'SK',
-    image: PlaceHolderImages.find(i => i.id === 'faculty-2')?.imageUrl,
-  },
-  {
-    name: 'Sir Bilal Siddique',
-    subject: 'Business Studies & Accounting',
-    category: 'Business',
-    qualification: 'ACCA (Gold Medalist), MBA Finance',
-    bio: 'Using real-world business scenarios, Sir Bilal bridges the gap between textbook theory and professional application in commerce subjects.',
-    avatar: 'BS',
-    image: PlaceHolderImages.find(i => i.id === 'faculty-3')?.imageUrl,
-  },
-  {
-    name: 'Ms. Fatima Zahra',
-    subject: 'Chemistry & Biology',
-    category: 'Sciences',
-    qualification: 'M.Sc Biochemistry (LUMS)',
-    bio: 'Passionate about lab sciences, Ms. Fatima uses conceptual mapping and visual aids to make molecular biology accessible and memorable.',
-    avatar: 'FZ',
-    image: PlaceHolderImages.find(i => i.id === 'faculty-2')?.imageUrl,
-  },
-  {
-    name: 'Sir Usman Ali',
-    subject: 'Pak Studies & Islamiat',
-    category: 'Social Studies',
-    qualification: 'M.A History, M.A Islamic Studies (PU)',
-    bio: 'Known for engaging storytelling, Sir Usman makes history and religious studies highly relatable — students consistently achieve top grades.',
-    avatar: 'UA',
-    image: PlaceHolderImages.find(i => i.id === 'faculty-1')?.imageUrl,
-  },
-  {
-    name: 'Ms. Zainab Malik',
-    subject: 'Economics',
-    category: 'Business',
-    qualification: 'M.Sc Economics (LUMS)',
-    bio: 'Bridging theory and global trends, Ms. Zainab is expert in Cambridge exam techniques, time management, and analytical writing skills.',
-    avatar: 'ZM',
-    image: PlaceHolderImages.find(i => i.id === 'faculty-3')?.imageUrl,
-  },
-  {
-    name: 'Sir Hamza Raza',
-    subject: 'Physics',
-    category: 'Sciences',
-    qualification: 'B.Sc Electrical Engineering (NUST)',
-    bio: 'Sir Hamza breaks down complex physics principles through demonstrations and problem-solving sessions that build both confidence and skill.',
-    avatar: 'HR',
-    image: PlaceHolderImages.find(i => i.id === 'faculty-1')?.imageUrl,
-  },
-  {
-    name: 'Ms. Ayesha Nadeem',
-    subject: 'Computer Science',
-    category: 'Sciences',
-    qualification: 'BS Computer Science (FAST-NUCES)',
-    bio: 'Specialising in Cambridge Computer Science, Ms. Ayesha ensures students master both theory and practical programming for O-Level exams.',
-    avatar: 'AN',
-    image: PlaceHolderImages.find(i => i.id === 'faculty-2')?.imageUrl,
-  },
+  { name: 'Sir Ahmed Hassan',   subject: 'Mathematics & Add. Maths',     cat: 'Mathematics',    qual: 'M.Phil Mathematics (UET Lahore)',   bio: '12+ years of O-Level coaching — making Additional Mathematics intuitive. 90%+ A grades consistently.', av: 'AH', img: PlaceHolderImages.find(i => i.id === 'faculty-1')?.imageUrl },
+  { name: 'Ms. Sarah Khan',     subject: 'English Language & Lit.',       cat: 'English',        qual: 'MA English (PU) · CELTA Certified',  bio: 'Specialises in critical analysis and creative writing. 90% of students achieve A* in Cambridge English.', av: 'SK', img: PlaceHolderImages.find(i => i.id === 'faculty-2')?.imageUrl },
+  { name: 'Sir Bilal Siddique', subject: 'Business Studies & Accounting', cat: 'Business',       qual: 'ACCA Gold Medalist · MBA Finance',    bio: 'Real-world business scenarios bridge textbook theory and professional application for O-Level commerce.', av: 'BS', img: PlaceHolderImages.find(i => i.id === 'faculty-3')?.imageUrl },
+  { name: 'Ms. Fatima Zahra',  subject: 'Chemistry & Biology',           cat: 'Sciences',       qual: 'M.Sc Biochemistry (LUMS)',            bio: 'Conceptual mapping and visual aids make molecular biology accessible, memorable, and high-scoring.', av: 'FZ', img: PlaceHolderImages.find(i => i.id === 'faculty-2')?.imageUrl },
+  { name: 'Sir Usman Ali',     subject: 'Pak Studies & Islamiat',        cat: 'Social Studies', qual: 'M.A History · M.A Islamic Studies (PU)', bio: 'Engaging storytelling makes history and religious studies highly relatable — consistent top-grade results.', av: 'UA', img: PlaceHolderImages.find(i => i.id === 'faculty-1')?.imageUrl },
+  { name: 'Ms. Zainab Malik',  subject: 'Economics',                     cat: 'Business',       qual: 'M.Sc Economics (LUMS)',               bio: 'Bridges global economic trends with Cambridge exam techniques, analytical writing, and time management.', av: 'ZM', img: PlaceHolderImages.find(i => i.id === 'faculty-3')?.imageUrl },
+  { name: 'Sir Hamza Raza',    subject: 'Physics',                       cat: 'Sciences',       qual: 'B.Sc Electrical Eng. (NUST)',         bio: 'Physics principles through demonstrations and problem-solving sessions that build confidence and exam skill.', av: 'HR', img: PlaceHolderImages.find(i => i.id === 'faculty-1')?.imageUrl },
+  { name: 'Ms. Ayesha Nadeem', subject: 'Computer Science',              cat: 'Sciences',       qual: 'BS Computer Science (FAST-NUCES)',    bio: 'Cambridge Computer Science specialist — mastery of both theory and practical programming for O-Level.', av: 'AN', img: PlaceHolderImages.find(i => i.id === 'faculty-2')?.imageUrl },
 ];
 
 export default function FacultyPage() {
-  const [activeFilter, setActiveFilter] = useState('All');
-
-  const filtered = activeFilter === 'All'
-    ? faculty
-    : faculty.filter((f) => f.category === activeFilter);
+  const [active, setActive] = useState('All');
+  const shown = active === 'All' ? faculty : faculty.filter(f => f.cat === active);
 
   return (
-    <div className="pb-24">
-      {/* Header */}
-      <section className="bg-secondary text-secondary-foreground py-24 mb-20 rounded-b-[4rem]">
-        <div className="container mx-auto px-4 text-center max-w-3xl">
-          <span className="text-accent font-accent uppercase tracking-[0.3em] text-[10px] font-bold mb-4 block">
-            Our Mentors
-          </span>
-          <h1 className="text-5xl md:text-7xl font-headline font-bold text-white mb-6">Expert Educators</h1>
-          <p className="text-xl text-secondary-foreground/70 leading-relaxed">
-            Led by some of the most qualified Cambridge educators in Lahore — excellence in every subject, every session.
+    <div
+      className="pb-24 min-h-screen"
+      style={{ background: '#faf8f4', fontFamily: "'Cormorant Garamond', Georgia, serif" }}
+    >
+
+      {/* ── HEADER ── */}
+      <section
+        className="relative overflow-hidden pt-36 pb-28"
+        style={{ background: 'linear-gradient(135deg, #0b1628 0%, #1a0a0e 60%, #0b1628 100%)' }}
+      >
+        <div className="absolute inset-0 opacity-[0.03] pointer-events-none"
+          style={{ backgroundImage: "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E\")", backgroundSize: '200px' }} />
+        <div className="absolute right-[-5%] top-[5%] w-[600px] h-[600px] rounded-full border border-[#C8960C]/8 pointer-events-none" />
+
+        <div className="container mx-auto px-6 max-w-7xl relative z-10 text-center">
+          <div className="flex items-center justify-center gap-3 mb-8">
+            <div className="h-px w-12 bg-[#C8960C]/40" />
+            <span className="text-[#C8960C] tracking-[0.35em] text-[10px] font-semibold uppercase" style={{ fontFamily: "'Inter', sans-serif" }}>Our Mentors</span>
+            <div className="h-px w-12 bg-[#C8960C]/40" />
+          </div>
+          <h1 className="text-white mb-6" style={{ fontSize: 'clamp(3rem, 7vw, 5.5rem)', fontWeight: 700, lineHeight: '1.02' }}>
+            Expert <span style={{ color: '#C8960C', fontStyle: 'italic' }}>Educators</span>
+          </h1>
+          <p className="text-xl leading-relaxed mx-auto" style={{ color: 'rgba(255,255,255,0.45)', maxWidth: '600px', fontFamily: "'Inter', sans-serif", fontWeight: 300 }}>
+            Lahore's most qualified Cambridge educators — excellence in every subject, every session.
           </p>
         </div>
       </section>
 
-      <div className="container mx-auto px-4">
-        {/* Filters */}
-        <div className="flex flex-wrap justify-center gap-3 mb-16">
-          {filterCategories.map((cat) => (
+      <div className="container mx-auto px-6 max-w-7xl">
+
+        {/* ── FILTERS ── */}
+        <div className="flex flex-wrap justify-center gap-3 my-16">
+          {filters.map(cat => (
             <button
               key={cat}
-              onClick={() => setActiveFilter(cat)}
-              className={`px-6 py-2.5 rounded-full font-accent text-[11px] font-bold uppercase tracking-widest transition-all duration-200 border ${
-                activeFilter === cat
-                  ? 'bg-primary border-primary text-white shadow-md'
-                  : 'border-muted text-muted-foreground hover:border-primary hover:text-primary'
-              }`}
+              onClick={() => setActive(cat)}
+              className="font-semibold uppercase transition-all duration-300"
+              style={{
+                fontFamily: "'Inter', sans-serif",
+                fontSize: '10px',
+                letterSpacing: '0.2em',
+                padding: '10px 24px',
+                borderRadius: '100px',
+                border: active === cat ? 'none' : '1px solid rgba(11,22,40,0.15)',
+                background: active === cat ? '#7B1C2E' : 'transparent',
+                color: active === cat ? 'white' : 'rgba(11,22,40,0.45)',
+                boxShadow: active === cat ? '0 8px 24px rgba(123,28,46,0.3)' : 'none',
+              }}
             >
               {cat}
             </button>
           ))}
         </div>
 
-        {/* Faculty Grid — 3D Flip Cards */}
+        {/* ── GRID ── */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-          {filtered.map((member, i) => (
+          {shown.map((m, i) => (
             <div
-              key={member.name}
-              className="group h-[480px] [perspective:1000px] animate-fade-up"
-              style={{ animationDelay: `${i * 80}ms` }}
+              key={m.name}
+              className="group h-[490px]"
+              style={{ perspective: '1100px' }}
             >
-              <div className="relative h-full w-full rounded-[2rem] shadow-card transition-all duration-700 [transform-style:preserve-3d] group-hover:[transform:rotateY(180deg)] cursor-pointer">
+              <div
+                className="relative h-full w-full transition-all duration-700 cursor-pointer"
+                style={{
+                  transformStyle: 'preserve-3d',
+                  borderRadius: '2rem',
+                  transform: undefined,
+                }}
+                onMouseEnter={e => (e.currentTarget as HTMLElement).style.transform = 'rotateY(180deg)'}
+                onMouseLeave={e => (e.currentTarget as HTMLElement).style.transform = 'rotateY(0deg)'}
+              >
 
-                {/* ─ FRONT ─ */}
-                <div className="absolute inset-0 h-full w-full [backface-visibility:hidden]">
-                  <Card className="h-full border-none overflow-hidden rounded-[2rem]">
-                    <div className="relative h-[62%] w-full">
-                      <Image
-                        src={member.image ?? ''}
-                        alt={member.name}
-                        fill
-                        className="object-cover transition-transform duration-500 group-hover:scale-105"
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-t from-secondary via-transparent to-transparent opacity-75" />
-                      <div className="absolute bottom-5 left-5 right-5">
-                        <Badge className="bg-accent text-secondary font-accent text-[9px] uppercase tracking-widest mb-2 border-none">
-                          {member.subject}
-                        </Badge>
-                        <h3 className="text-xl font-headline font-bold text-white leading-tight">{member.name}</h3>
-                      </div>
+                {/* ── FRONT ── */}
+                <div
+                  className="absolute inset-0 overflow-hidden"
+                  style={{
+                    backfaceVisibility: 'hidden',
+                    WebkitBackfaceVisibility: 'hidden',
+                    borderRadius: '2rem',
+                    background: 'white',
+                    border: '1px solid rgba(123,28,46,0.08)',
+                    boxShadow: '0 4px 24px rgba(11,22,40,0.06)',
+                  }}
+                >
+                  <div className="relative h-[62%] w-full overflow-hidden">
+                    <Image src={m.img ?? ''} alt={m.name} fill className="object-cover" />
+                    <div className="absolute inset-0" style={{ background: 'linear-gradient(to top, #0b1628 0%, rgba(11,22,40,0.1) 60%, transparent 100%)' }} />
+                    <div className="absolute bottom-5 left-6 right-6">
+                      <span
+                        className="inline-block mb-2 px-3 py-1 rounded-full text-[8.5px] font-semibold uppercase tracking-widest"
+                        style={{ background: '#C8960C', color: '#0b1628', fontFamily: "'Inter', sans-serif" }}
+                      >
+                        {m.subject}
+                      </span>
+                      <h3 className="text-white text-xl font-bold leading-tight">{m.name}</h3>
                     </div>
-                    <CardContent className="h-[38%] bg-white p-6 flex flex-col justify-center">
-                      <div className="flex items-center gap-2 text-primary mb-2">
-                        <GraduationCap size={15} />
-                        <span className="text-[10px] font-accent font-bold uppercase tracking-wider">{member.qualification}</span>
+                  </div>
+                  <div className="h-[38%] p-6 flex flex-col justify-between">
+                    <div>
+                      <div className="flex items-center gap-2 mb-2" style={{ color: '#7B1C2E' }}>
+                        <GraduationCap size={14} />
+                        <span className="text-[9px] uppercase tracking-wider font-semibold" style={{ fontFamily: "'Inter', sans-serif" }}>{m.qual}</span>
                       </div>
-                      <p className="text-xs text-muted-foreground line-clamp-3 leading-relaxed">{member.bio}</p>
-                      <div className="mt-3 pt-3 border-t border-muted flex justify-between items-center">
-                        <span className="text-[9px] font-accent font-bold uppercase text-accent tracking-widest">Hover to read more</span>
-                        <BookOpen size={13} className="text-accent" />
-                      </div>
-                    </CardContent>
-                  </Card>
+                      <p className="text-xs leading-relaxed line-clamp-2" style={{ color: 'rgba(11,22,40,0.45)', fontFamily: "'Inter', sans-serif", fontWeight: 300 }}>{m.bio}</p>
+                    </div>
+                    <div className="flex justify-between items-center pt-3" style={{ borderTop: '1px solid rgba(11,22,40,0.07)' }}>
+                      <span className="text-[8.5px] uppercase tracking-widest font-semibold" style={{ color: '#C8960C', fontFamily: "'Inter', sans-serif" }}>Hover for bio</span>
+                      <BookOpen size={12} style={{ color: '#C8960C' }} />
+                    </div>
+                  </div>
                 </div>
 
-                {/* ─ BACK ─ */}
-                <div className="absolute inset-0 h-full w-full rounded-[2rem] bg-gradient-to-br from-primary to-secondary p-10 text-white [backface-visibility:hidden] [transform:rotateY(180deg)] flex flex-col justify-center items-center text-center space-y-5 shadow-2xl">
-                  {/* Avatar initials */}
-                  <div className="w-20 h-20 bg-white/15 border-2 border-white/30 rounded-full flex items-center justify-center text-xl font-headline font-bold">
-                    {member.avatar}
+                {/* ── BACK ── */}
+                <div
+                  className="absolute inset-0 flex flex-col justify-center items-center text-center px-10 py-12"
+                  style={{
+                    backfaceVisibility: 'hidden',
+                    WebkitBackfaceVisibility: 'hidden',
+                    transform: 'rotateY(180deg)',
+                    borderRadius: '2rem',
+                    background: 'linear-gradient(145deg, #7B1C2E 0%, #4a0e1b 100%)',
+                    boxShadow: '0 20px 60px rgba(123,28,46,0.4)',
+                  }}
+                >
+                  <div
+                    className="w-20 h-20 rounded-full flex items-center justify-center text-2xl font-bold text-white mb-5"
+                    style={{ fontFamily: "'Cormorant Garamond', serif", background: 'rgba(255,255,255,0.1)', border: '2px solid rgba(255,255,255,0.2)' }}
+                  >
+                    {m.av}
                   </div>
-                  <div>
-                    <h3 className="text-2xl font-headline font-bold">{member.name}</h3>
-                    <p className="text-accent text-xs font-accent uppercase tracking-widest mt-1">{member.subject}</p>
-                  </div>
-                  <div className="w-10 h-0.5 bg-accent/60 rounded-full" />
-                  <p className="text-sm leading-relaxed opacity-85 italic">
-                    "{member.bio}"
+                  <h3 className="text-white text-2xl font-bold mb-1">{m.name}</h3>
+                  <p className="text-[9px] uppercase tracking-widest mb-4" style={{ color: '#C8960C', fontFamily: "'Inter', sans-serif" }}>{m.subject}</p>
+                  <div className="w-10 h-[1.5px] rounded-full mb-5 mx-auto" style={{ background: 'rgba(200,150,12,0.5)' }} />
+                  <p className="text-sm leading-relaxed italic" style={{ color: 'rgba(255,255,255,0.7)', fontFamily: "'Cormorant Garamond', Georgia, serif" }}>
+                    "{m.bio}"
                   </p>
-                  <Badge variant="outline" className="border-white/30 text-white rounded-full font-accent px-5 py-1.5 text-[10px] tracking-widest uppercase">
+                  <div
+                    className="mt-6 px-5 py-2 rounded-full text-[9px] uppercase tracking-widest text-white font-semibold"
+                    style={{ border: '1px solid rgba(255,255,255,0.2)', background: 'rgba(255,255,255,0.08)', fontFamily: "'Inter', sans-serif" }}
+                  >
                     Cambridge Specialist
-                  </Badge>
+                  </div>
                 </div>
-
               </div>
             </div>
           ))}
         </div>
 
-        {filtered.length === 0 && (
-          <div className="text-center py-20 text-muted-foreground">
-            <p className="font-headline text-2xl mb-2">No faculty in this category yet.</p>
-            <p className="text-sm">Check back soon as we expand our team!</p>
+        {shown.length === 0 && (
+          <div className="text-center py-24" style={{ color: 'rgba(11,22,40,0.3)' }}>
+            <p className="text-3xl mb-2">No faculty in this category yet.</p>
+            <p className="text-sm" style={{ fontFamily: "'Inter', sans-serif", fontWeight: 300 }}>Check back soon as we grow our team!</p>
           </div>
         )}
+
+        {/* ── CTA ── */}
+        <div
+          className="mt-20 rounded-[2.5rem] p-14 text-center"
+          style={{ background: 'linear-gradient(135deg, #0b1628 0%, #1a0a0e 100%)', border: '1px solid rgba(200,150,12,0.15)' }}
+        >
+          <p className="text-[10px] uppercase tracking-[0.35em] mb-3" style={{ color: 'rgba(255,255,255,0.35)', fontFamily: "'Inter', sans-serif" }}>Join Our Academy</p>
+          <h3 className="text-white text-4xl font-bold mb-6">Learn from the Best</h3>
+          <Link
+            href="/register"
+            className="group inline-flex items-center gap-3 px-10 py-4 rounded-full font-semibold tracking-widest uppercase transition-all duration-300 hover:opacity-90"
+            style={{ background: '#C8960C', color: '#0b1628', fontFamily: "'Inter', sans-serif", fontSize: '11px', letterSpacing: '0.1em' }}
+          >
+            Enroll Now
+            <ArrowRight size={15} className="transition-transform duration-300 group-hover:translate-x-1" />
+          </Link>
+        </div>
       </div>
     </div>
   );
