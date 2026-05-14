@@ -2,71 +2,99 @@ import React from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 
+const sections = [
+  {
+    title: '1. Information We Collect',
+    content:
+      'We collect personal information that you provide directly when you register for classes, contact us via our website, or sign up for updates. This includes your name, email address, phone number, home address, age, and academic background.',
+  },
+  {
+    title: '2. How We Use Your Information',
+    content: null,
+    list: [
+      'Process your enrollment application and maintain academic records.',
+      'Communicate with you regarding schedules, assessments, and academy updates.',
+      'Send confirmation and notification emails related to your registration.',
+      'Improve our curriculum and educational service quality.',
+      'Ensure a safe and secure learning environment on campus and online.',
+    ],
+  },
+  {
+    title: '3. Information Sharing',
+    content:
+      'We do not sell, trade, rent, or otherwise transfer your personally identifiable information to third parties. Information is only shared when strictly required to provide the educational services you have requested (e.g., Cambridge registration bodies) or when required by applicable law.',
+  },
+  {
+    title: '4. Email Communications',
+    content:
+      'By submitting the enrollment or contact form on our website, you consent to receiving transactional emails from AECS Academy, including registration confirmations and session reminders. You may opt out of non-essential communications at any time by contacting us.',
+  },
+  {
+    title: '5. Data Security',
+    content:
+      'We implement appropriate technical and organisational security measures to protect your personal information from unauthorised access, alteration, disclosure, or destruction. However, no internet-based service can guarantee absolute security.',
+  },
+  {
+    title: '6. Cookies',
+    content:
+      'Our website may use session cookies to enhance your browsing experience. You may disable cookies in your browser settings; however, some features of the website may not function as expected if you do so.',
+  },
+  {
+    title: '7. Children\'s Privacy',
+    content:
+      'Our services are intended for students aged 10–18 and their parents or guardians. We do not knowingly collect personal information from children under the age of 13 without verified parental consent. If you believe we have inadvertently collected such information, please contact us immediately.',
+  },
+  {
+    title: '8. Your Rights',
+    content:
+      'You have the right to request access to the personal information we hold about you, request correction of inaccurate data, or request deletion of your personal data where it is no longer necessary for the purposes for which it was collected. To exercise these rights, contact us at Hassani854@gmail.com.',
+  },
+  {
+    title: '9. Changes to This Policy',
+    content:
+      'We may update this Privacy Policy from time to time. Any changes will be posted on this page with an updated date. Continued use of our services after changes constitutes acceptance of the revised policy.',
+  },
+];
+
 export default function PrivacyPolicyPage() {
   return (
     <div className="pb-24">
-      {/* Header */}
       <section className="bg-muted/30 py-24 mb-16">
         <div className="container mx-auto px-4 text-center max-w-3xl">
-          <span className="text-accent font-accent uppercase tracking-[0.3em] text-[10px] font-bold mb-4 block">Legal & Security</span>
-          <h1 className="text-5xl md:text-7xl font-headline font-bold text-secondary mb-6">Privacy Policy</h1>
+          <span className="text-accent font-accent uppercase tracking-[0.3em] text-[10px] font-bold mb-4 block">
+            Legal &amp; Security
+          </span>
+          <h1 className="text-5xl md:text-7xl font-headline font-bold text-secondary mb-6">
+            Privacy Policy
+          </h1>
           <p className="text-xl text-muted-foreground leading-relaxed">
             How we collect, use, and protect your information at AECS Academy.
           </p>
+          <p className="text-sm text-muted-foreground mt-4">Last updated: June 2025</p>
         </div>
       </section>
 
       <div className="container mx-auto px-4 max-w-4xl">
         <Card className="border-none shadow-xl rounded-[3rem] p-8 md:p-16 bg-white overflow-hidden">
-          <CardContent className="space-y-12">
-            <section className="space-y-4">
-              <h2 className="text-3xl font-headline font-bold text-secondary">1. Information Collection</h2>
-              <p className="text-muted-foreground leading-relaxed">
-                We collect personal information that you provide directly to us when you register for classes, contact us via our website, or sign up for newsletters. This may include your name, email address, phone number, and academic background.
-              </p>
-            </section>
-
-            <Separator className="bg-muted" />
-
-            <section className="space-y-4">
-              <h2 className="text-3xl font-headline font-bold text-secondary">2. Use of Information</h2>
-              <p className="text-muted-foreground leading-relaxed">
-                The information we collect is used to:
-              </p>
-              <ul className="list-disc pl-6 space-y-2 text-muted-foreground">
-                <li>Process your enrollment applications and academic records.</li>
-                <li>Communicate with you regarding schedules, assessments, and academy updates.</li>
-                <li>Improve our curriculum and educational services.</li>
-                <li>Ensure a safe and secure learning environment on campus.</li>
-              </ul>
-            </section>
-
-            <Separator className="bg-muted" />
-
-            <section className="space-y-4">
-              <h2 className="text-3xl font-headline font-bold text-secondary">3. Data Security</h2>
-              <p className="text-muted-foreground leading-relaxed">
-                We implement a variety of security measures to maintain the safety of your personal information. We do not sell, trade, or otherwise transfer your personally identifiable information to outside parties except to provide products or services you have requested.
-              </p>
-            </section>
-
-            <Separator className="bg-muted" />
-
-            <section className="space-y-4">
-              <h2 className="text-3xl font-headline font-bold text-secondary">4. Cookies</h2>
-              <p className="text-muted-foreground leading-relaxed">
-                Our website may use "cookies" to enhance the user experience. You may choose to set your web browser to refuse cookies, or to alert you when cookies are being sent. Note that some parts of the site may not function properly if you do so.
-              </p>
-            </section>
-
-            <Separator className="bg-muted" />
-
-            <section className="space-y-4">
-              <h2 className="text-3xl font-headline font-bold text-secondary">5. Consent</h2>
-              <p className="text-muted-foreground leading-relaxed">
-                By using our site, you consent to our website's privacy policy. Any changes to our privacy policy will be posted on this page.
-              </p>
-            </section>
+          <CardContent className="space-y-10 p-0">
+            {sections.map((sec, i) => (
+              <React.Fragment key={i}>
+                <section className="space-y-3">
+                  <h2 className="text-2xl font-headline font-bold text-secondary">{sec.title}</h2>
+                  {sec.content && (
+                    <p className="text-muted-foreground leading-relaxed">{sec.content}</p>
+                  )}
+                  {sec.list && (
+                    <ul className="list-disc pl-5 space-y-2 text-muted-foreground">
+                      {sec.list.map((item, j) => (
+                        <li key={j} className="leading-relaxed">{item}</li>
+                      ))}
+                    </ul>
+                  )}
+                </section>
+                {i < sections.length - 1 && <Separator className="bg-muted" />}
+              </React.Fragment>
+            ))}
           </CardContent>
         </Card>
       </div>
