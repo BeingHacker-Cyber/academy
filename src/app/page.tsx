@@ -5,11 +5,10 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import {
   CheckCircle2, Star, Users, GraduationCap, Award,
-  ArrowRight, BookOpen, Clock, Brain, ShieldCheck,
+  ArrowRight, BookOpen, ShieldCheck,
   TrendingUp, Lightbulb
 } from 'lucide-react';
 import { PlaceHolderImages } from '@/app/lib/placeholder-images';
-import CourseMatchmaker from '@/components/CourseMatchmaker';
 
 const stats = [
   { label: 'Enrolled Students', value: '500+', icon: Users },
@@ -41,6 +40,24 @@ const values = [
   },
 ];
 
+const Brain = (props: any) => (
+  <svg
+    {...props}
+    xmlns="http://www.w3.org/2000/svg"
+    width="24"
+    height="24"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+  >
+    <path d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96.44 2.5 2.5 0 0 1-2.96-3.08 3 3 0 0 1-.34-5.58 2.5 2.5 0 0 1 1.32-4.24 2.5 2.5 0 0 1 4.44-2.54Z" />
+    <path d="M14.5 2A2.5 2.5 0 0 0 12 4.5v15a2.5 2.5 0 0 0 4.96.44 2.5 2.5 0 0 0 2.96-3.08 3 3 0 0 0 .34-5.58 2.5 2.5 0 0 0-1.32-4.24 2.5 2.5 0 0 0-4.44-2.54Z" />
+  </svg>
+);
+
 export default function Home() {
   const heroImage = PlaceHolderImages.find((img) => img.id === 'hero-bg');
   const classroomImage = PlaceHolderImages.find((img) => img.id === 'classroom');
@@ -71,24 +88,6 @@ export default function Home() {
                   <Link href="/contact">Inquire Now</Link>
                 </Button>
               </div>
-              <div className="flex items-center gap-4 pt-4">
-                <div className="flex -space-x-2">
-                  {[1, 2, 3, 4].map((i) => (
-                    <div key={i} className="w-10 h-10 rounded-full border-2 border-white overflow-hidden bg-muted">
-                      <Image 
-                        src={`https://picsum.photos/seed/student${i}/100/100`} 
-                        alt="Student" 
-                        width={40} 
-                        height={40} 
-                        data-ai-hint="student face"
-                      />
-                    </div>
-                  ))}
-                </div>
-                <p className="text-sm font-medium text-muted-foreground">
-                  Joined by <span className="text-secondary font-bold">500+ students</span> in 2024
-                </p>
-              </div>
             </div>
             
             <div className="relative animate-fade-up" style={{ animationDelay: '0.2s' }}>
@@ -99,7 +98,6 @@ export default function Home() {
                   fill
                   className="object-cover"
                   priority
-                  data-ai-hint="modern academy"
                 />
               </div>
               <div className="absolute -bottom-6 -left-6 bg-white p-6 rounded-3xl shadow-xl border border-muted hidden md:block">
@@ -116,7 +114,6 @@ export default function Home() {
             </div>
           </div>
         </div>
-        {/* Background Decorations */}
         <div className="absolute top-0 right-0 w-1/3 h-full bg-primary/5 -skew-x-12 transform origin-top translate-x-1/2 -z-10" />
       </section>
 
@@ -159,11 +156,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ── AI MATCHMAKER ── */}
-      <section className="py-24">
-        <CourseMatchmaker />
-      </section>
-
       {/* ── CAMPUS PREVIEW ── */}
       <section className="py-24 bg-secondary text-white rounded-[3rem] mx-4 overflow-hidden relative">
         <div className="container mx-auto px-4 max-w-7xl">
@@ -198,7 +190,6 @@ export default function Home() {
                 alt="AECS Classroom"
                 fill
                 className="object-cover"
-                data-ai-hint="classroom study"
               />
             </div>
           </div>
