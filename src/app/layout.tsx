@@ -1,3 +1,4 @@
+
 import type { Metadata, Viewport } from 'next';
 import { Cormorant_Garamond, Inter } from 'next/font/google';
 import './globals.css';
@@ -7,7 +8,7 @@ import { Toaster } from '@/components/ui/toaster';
 import Script from 'next/script';
 
 /* ═══════════════════════════════════════════════════════════════════════
-   FONTS — next/font/google (no onLoad string issue)
+   FONTS
    ═══════════════════════════════════════════════════════════════════════ */
 
 const cormorant = Cormorant_Garamond({
@@ -91,81 +92,6 @@ export const viewport: Viewport = {
 };
 
 /* ═══════════════════════════════════════════════════════════════════════
-   STRUCTURED DATA
-   ═══════════════════════════════════════════════════════════════════════ */
-
-const structuredData = {
-  '@context': 'https://schema.org',
-  '@graph': [
-    {
-      '@type': 'EducationalOrganization',
-      '@id': `${siteUrl}/#organization`,
-      name: 'AECS Academy',
-      alternateName: 'Academy for Excellence in Cambridge Studies',
-      url: siteUrl,
-      logo: { '@type': 'ImageObject', url: `${siteUrl}/logo.png`, width: 250, height: 60 },
-      image: `${siteUrl}/og-image.jpg`,
-      description: siteDescription,
-      address: {
-        '@type': 'PostalAddress',
-        streetAddress: '100 Platinum Homes, Al Kabir Town Phase 2',
-        addressLocality: 'Lahore', addressRegion: 'Punjab',
-        postalCode: '54000', addressCountry: 'PK',
-      },
-      geo: { '@type': 'GeoCoordinates', latitude: '31.3718', longitude: '74.2357' },
-      contactPoint: {
-        '@type': 'ContactPoint', telephone: '+92-314-4033054',
-        contactType: 'Admissions', email: 'Hassani854@gmail.com',
-        areaServed: 'PK', availableLanguage: ['English', 'Urdu'],
-      },
-      sameAs: [
-        'https://facebook.com/aecsacademy',
-        'https://instagram.com/aecsacademy',
-        'https://linkedin.com/company/aecsacademy',
-      ],
-      priceRange: '$$',
-      openingHoursSpecification: [{
-        '@type': 'OpeningHoursSpecification',
-        dayOfWeek: ['Monday','Tuesday','Wednesday','Thursday','Friday'],
-        opens: '14:00', closes: '20:00',
-      }],
-    },
-    {
-      '@type': 'WebSite', '@id': `${siteUrl}/#website`,
-      url: siteUrl, name: siteName,
-      publisher: { '@id': `${siteUrl}/#organization` },
-      potentialAction: {
-        '@type': 'SearchAction',
-        target: `${siteUrl}/search?q={search_term_string}`,
-        'query-input': 'required name=search_term_string',
-      },
-    },
-    {
-      '@type': 'LocalBusiness', '@id': `${siteUrl}/#localbusiness`,
-      name: 'AECS Academy', image: `${siteUrl}/campus.jpg`,
-      telephone: '+92-314-4033054', email: 'Hassani854@gmail.com',
-      address: {
-        '@type': 'PostalAddress',
-        streetAddress: '100 Platinum Homes, Al Kabir Town Phase 2, Near Lake City Raiwind Road',
-        addressLocality: 'Lahore', addressRegion: 'Punjab',
-        postalCode: '54000', addressCountry: 'PK',
-      },
-      geo: { '@type': 'GeoCoordinates', latitude: '31.3718', longitude: '74.2357' },
-      openingHoursSpecification: [{
-        '@type': 'OpeningHoursSpecification',
-        dayOfWeek: ['Monday','Tuesday','Wednesday','Thursday','Friday'],
-        opens: '14:00', closes: '20:00',
-      }],
-      priceRange: '$$',
-      aggregateRating: {
-        '@type': 'AggregateRating', ratingValue: '4.9',
-        reviewCount: '127', bestRating: '5', worstRating: '1',
-      },
-    },
-  ],
-};
-
-/* ═══════════════════════════════════════════════════════════════════════
    ROOT LAYOUT
    ═══════════════════════════════════════════════════════════════════════ */
 
@@ -181,35 +107,16 @@ export default function RootLayout({
       <head>
         {/* DNS prefetch */}
         <link rel="dns-prefetch" href="https://cdn.jsdelivr.net" />
-
-        {/* Favicons */}
         <link rel="icon" href="/favicon.ico" sizes="any" />
-        <link rel="icon" href="/icon.svg" type="image/svg+xml" />
-        <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
-        <link rel="manifest" href="/manifest.json" />
-
-        {/* Structured data */}
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
-        />
       </head>
 
       <body
         className="antialiased min-h-screen flex flex-col bg-background text-foreground"
         style={{ fontFamily: "var(--font-inter), 'Helvetica Neue', sans-serif" }}
       >
-        {/* Accessibility skip link */}
-        <a
-          href="#main-content"
-          className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-[9999] focus:px-6 focus:py-3 focus:bg-primary focus:text-white focus:rounded-full focus:shadow-xl"
-        >
-          Skip to main content
-        </a>
-
         <Navbar />
 
-        <main id="main-content" className="flex-grow pt-20" role="main">
+        <main id="main-content" className="flex-grow" role="main">
           {children}
         </main>
 
@@ -227,20 +134,13 @@ export default function RootLayout({
             window.dataLayer = window.dataLayer || [];
             function gtag(){dataLayer.push(arguments);}
             gtag('js', new Date());
-            gtag('config', 'G-XXXXXXXXXX', {
-              page_path: window.location.pathname,
-              anonymize_ip: true,
-            });
+            gtag('config', 'G-XXXXXXXXXX');
           `}
         </Script>
       </body>
     </html>
   );
 }
-
-/* ═══════════════════════════════════════════════════════════════════════
-   SCROLL TO TOP
-   ═══════════════════════════════════════════════════════════════════════ */
 
 function ScrollToTop() {
   return (
@@ -249,43 +149,12 @@ function ScrollToTop() {
         (function() {
           const btn = document.createElement('button');
           btn.innerHTML = '↑';
-          btn.setAttribute('aria-label', 'Scroll to top');
-          btn.style.cssText = [
-            'position:fixed','bottom:24px','right:24px','z-index:999',
-            'width:52px','height:52px','border-radius:50%',
-            'background:linear-gradient(135deg,#7B1C2E 0%,#5A0E1F 100%)',
-            'color:#fff','border:none','font-size:24px','cursor:pointer',
-            'display:none','align-items:center','justify-content:center',
-            'box-shadow:0 8px 24px rgba(123,28,46,0.3)',
-            'transition:all 0.3s cubic-bezier(0.16,1,0.3,1)',
-            'opacity:0','transform:scale(0.8)',
-          ].join(';');
+          btn.style.cssText = 'position:fixed;bottom:24px;right:24px;z-index:999;width:52px;height:52px;border-radius:50%;background:#7B1C2E;color:#fff;border:none;cursor:pointer;display:none;align-items:center;justify-content:center;box-shadow:0 8px 24px rgba(123,28,46,0.3);';
           document.body.appendChild(btn);
-
-          let visible = false;
-          window.addEventListener('scroll', function() {
-            const show = window.scrollY > 400;
-            if (show !== visible) {
-              visible = show;
-              btn.style.display = show ? 'flex' : 'none';
-              setTimeout(() => {
-                btn.style.opacity = show ? '1' : '0';
-                btn.style.transform = show ? 'scale(1)' : 'scale(0.8)';
-              }, 10);
-            }
-          }, { passive: true });
-
-          btn.addEventListener('mouseenter', function() {
-            this.style.background = 'linear-gradient(135deg,#C8960C 0%,#F0C040 100%)';
-            this.style.transform = 'scale(1.1) translateY(-4px)';
-            this.style.boxShadow = '0 12px 32px rgba(200,150,12,0.4)';
+          window.addEventListener('scroll', () => {
+            btn.style.display = window.scrollY > 400 ? 'flex' : 'none';
           });
-          btn.addEventListener('mouseleave', function() {
-            this.style.background = 'linear-gradient(135deg,#7B1C2E 0%,#5A0E1F 100%)';
-            this.style.transform = 'scale(1)';
-            this.style.boxShadow = '0 8px 24px rgba(123,28,46,0.3)';
-          });
-          btn.addEventListener('click', function() {
+          btn.addEventListener('click', () => {
             window.scrollTo({ top: 0, behavior: 'smooth' });
           });
         })();
