@@ -50,10 +50,10 @@ const gradeSubjects: Record<string, string[]> = {
    Zod schema
 ───────────────────────────────────── */
 const formSchema = z.object({
-  fullName:         z.string().min(2, 'Full name must be at least 2 characters'),
-  age:              z.coerce.number().min(10, 'Minimum age is 10').max(20, 'Maximum age is 20'),
-  email:            z.string().email('Please enter a valid email address'),
-  phone:            z.string().min(10, 'Please enter a valid phone number'),
+  fullName:         z.string().min(3, 'Full name must be at least 3 characters'),
+  age:              z.coerce.number().min(10, 'Minimum age is 10').max(50, 'Maximum age is 50'),
+  email:            z.string().email('Please enter a valid email address (must contain @)'),
+  phone:            z.string().regex(/^\+92\d{10}$/, 'Phone must start with +92 followed by 10 digits (e.g., +923144033054)'),
   primaryAddress:   z.string().min(5, 'Primary address is required'),
   secondaryAddress: z.string().optional(),
   classLevel:       z.string().min(1, 'Please select your class'),
@@ -85,7 +85,7 @@ export default function EnrollmentForm() {
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      fullName: '', age: 13, email: '', phone: '',
+      fullName: '', age: 13, email: '', phone: '+92',
       primaryAddress: '', secondaryAddress: '',
       classLevel: '', subjects: [],
       sessionPreference: 'Both', consent: false,
@@ -257,7 +257,7 @@ export default function EnrollmentForm() {
                         Age *
                       </FormLabel>
                       <FormControl>
-                        <Input type="number" min={10} max={20} className="h-12 rounded-xl bg-muted/20" {...field} />
+                        <Input type="number" min={10} max={50} className="h-12 rounded-xl bg-muted/20" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -280,11 +280,12 @@ export default function EnrollmentForm() {
                   <FormField control={form.control} name="phone" render={({ field }) => (
                     <FormItem>
                       <FormLabel className="font-accent text-[10px] uppercase tracking-widest text-muted-foreground">
-                        <Phone size={11} className="inline mr-1" />Phone Number *
+                        <Phone size={11} className="inline mr-1" />Phone Number (Pakistan) *
                       </FormLabel>
                       <FormControl>
-                        <Input type="tel" placeholder="03XX XXXXXXX" className="h-12 rounded-xl bg-muted/20" {...field} />
+                        <Input type="tel" placeholder="+923XXXXXXXXX" className="h-12 rounded-xl bg-muted/20" {...field} />
                       </FormControl>
+                      <FormDescription className="text-[10px]">Format: +92 followed by 10 digits</FormDescription>
                       <FormMessage />
                     </FormItem>
                   )} />

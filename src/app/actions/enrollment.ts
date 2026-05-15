@@ -3,7 +3,7 @@
 
 import { Resend } from 'resend';
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+//const resend = new Resend(process.env.RESEND_API_KEY);
 const OWNER_EMAIL = 'hassani854@gmail.com';
 
 interface EnrollmentData {
