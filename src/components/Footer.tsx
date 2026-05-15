@@ -5,19 +5,20 @@ import { Phone, Mail, MapPin, Instagram, Facebook, Youtube, ArrowRight } from 'l
 import AECSLogo from './AECSLogo';
 import { motion } from 'framer-motion';
 
-const NAV_LINKS = [
+const EXPLORE_LINKS = [
   { name: 'Home',            href: '/'         },
-  { name: 'About AECS',      href: '/about'    },
-  { name: 'Expert Faculty',  href: '/faculty'  },
-  { name: 'Student Gallery', href: '/gallery'  },
+  { name: 'Courses',         href: '/#subjects'},
+  { name: 'About Us',        href: '/about'    },
   { name: 'Careers',         href: '/careers'  },
-  { name: 'Enrollment',      href: '/register' },
+  { name: 'Faculty',         href: '/faculty'  },
+  { name: 'Gallery',         href: '/gallery'  },
   { name: 'Contact Us',      href: '/contact'  },
 ];
 
-const SUBJECTS = [
-  'Mathematics', 'Physics', 'Chemistry', 'Biology',
-  'Computer Science', 'Business Studies', 'Economics', 'English',
+const LEGAL_LINKS = [
+  { name: 'FAQs',               href: '/#faqs'           },
+  { name: 'Privacy Policy',      href: '/privacy-policy'  },
+  { name: 'Terms and Conditions',href: '/terms-and-conditions' },
 ];
 
 export default function Footer() {
@@ -56,11 +57,11 @@ export default function Footer() {
             </div>
           </div>
 
-          {/* Navigation */}
+          {/* Explore */}
           <div>
-            <h4 className="font-accent text-[9px] font-bold tracking-[0.3em] uppercase text-[#7B1C2E] mb-6">Directory</h4>
+            <h4 className="font-accent text-[9px] font-bold tracking-[0.3em] uppercase text-[#7B1C2E] mb-6">Explore</h4>
             <ul className="space-y-3">
-              {NAV_LINKS.slice(0, 4).map((link) => (
+              {EXPLORE_LINKS.map((link) => (
                 <li key={link.name}>
                   <Link href={link.href} className="font-accent text-[10px] font-bold tracking-widest uppercase text-black/40 hover:text-[#7B1C2E] transition-all">
                     {link.name}
@@ -70,13 +71,15 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* Curriculum */}
+          {/* Trust & Legal */}
           <div>
-            <h4 className="font-accent text-[9px] font-bold tracking-[0.3em] uppercase text-[#7B1C2E] mb-6">Subjects</h4>
+            <h4 className="font-accent text-[9px] font-bold tracking-[0.3em] uppercase text-[#7B1C2E] mb-6">Trust & Legal</h4>
             <ul className="space-y-3">
-              {SUBJECTS.slice(0, 4).map((sub) => (
-                <li key={sub} className="font-accent text-[10px] font-medium tracking-widest uppercase text-black/30">
-                  {sub}
+              {LEGAL_LINKS.map((link) => (
+                <li key={link.name}>
+                  <Link href={link.href} className="font-accent text-[10px] font-bold tracking-widest uppercase text-black/40 hover:text-[#7B1C2E] transition-all">
+                    {link.name}
+                  </Link>
                 </li>
               ))}
             </ul>
@@ -112,22 +115,15 @@ export default function Footer() {
                 <h5 className="font-display text-base font-bold text-white">Enroll Now</h5>
               </div>
               <ArrowRight size={18} className="text-white transition-transform group-hover:translate-x-1" />
-              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
             </Link>
           </div>
         </div>
 
         {/* Legal & Bottom bar */}
         <div className="pt-8 border-t border-black/5 flex flex-col md:flex-row justify-between items-center gap-6">
-          <div className="flex flex-col md:flex-row items-center gap-6">
-            <p className="font-body text-[9px] font-light text-black/30">
-              © {year} AECS Academy. Registered Cambridge Provider.
-            </p>
-            <div className="flex gap-4">
-              <Link href="/privacy-policy" className="font-accent text-[8px] font-bold tracking-widest uppercase text-black/20 hover:text-[#7B1C2E] transition-colors">Privacy</Link>
-              <Link href="/terms-and-conditions" className="font-accent text-[8px] font-bold tracking-widest uppercase text-black/20 hover:text-[#7B1C2E] transition-colors">Terms</Link>
-            </div>
-          </div>
+          <p className="font-body text-[9px] font-light text-black/30">
+            © {year} AECS Academy. Registered Cambridge Provider.
+          </p>
           
           <div className="flex items-center gap-2">
             <span className="font-accent text-[9px] font-bold tracking-[0.15em] uppercase text-black/40">
