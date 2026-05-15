@@ -26,9 +26,9 @@ export async function submitEnrollmentAction(data: EnrollmentData) {
   const subjectsList = data.subjects.join(', ');
 
   try {
-    // 1. Send Branded Email to Student
+    // 1. Send Branded Email to Student using verified domain
     await resend.emails.send({
-      from: 'AECS Academy <onboarding@resend.dev>',
+      from: 'AECS Academy <admissions@aecsacademy.com>',
       to: [data.email],
       subject: 'Confirmation: Your Application to AECS Academy',
       html: `
@@ -60,9 +60,9 @@ export async function submitEnrollmentAction(data: EnrollmentData) {
       `,
     });
 
-    // 2. Send Detailed Alert to Owner
+    // 2. Send Detailed Alert to Owner using verified domain
     await resend.emails.send({
-      from: 'AECS System <onboarding@resend.dev>',
+      from: 'AECS Academy System <admissions@aecsacademy.com>',
       to: [OWNER_EMAIL],
       subject: `New Enrollment: ${data.fullName} | ${data.classLevel}`,
       html: `
