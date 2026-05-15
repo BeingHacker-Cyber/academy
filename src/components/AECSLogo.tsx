@@ -7,98 +7,71 @@ interface AECSLogoProps {
   size?: 'sm' | 'md' | 'lg';
 }
 
-export default function AECSLogo({ className = '', inverted = false, size = 'md' }: AECSLogoProps) {
-  const heights = { sm: 32, md: 42, lg: 56 };
+export default function AECSLogo({
+  className = '',
+  inverted = false,
+  size = 'md',
+}: AECSLogoProps) {
+  const heights = { sm: 36, md: 48, lg: 64 };
   const h = heights[size];
 
-  const maroon  = inverted ? '#FFFFFF'             : '#7B1C2E';
-  const navy    = inverted ? 'rgba(255,255,255,0.7)': '#0F1E38';
-  const gold    = '#C8960C';
+  const iconColor = inverted ? '#FFFFFF' : '#111111';
+  const textColor = inverted ? '#FFFFFF' : '#7B1C2E';
 
   return (
     <div
-      className={`inline-flex items-center gap-3 select-none cursor-default ${className}`}
-      style={{ height: h }}
+      className={`inline-flex items-center select-none cursor-default ${className}`}
+      style={{ height: h, gap: h * 0.16 }}
       aria-label="AECS Academy"
     >
-      {/* ── SVG MARK ── */}
+      {/*
+        Exact replica of uploaded logo:
+        - Solid black graduation mortarboard (flat diamond cap + dome)
+        - Open book below (two page-arc shapes + spine line)
+        - Tassel from right tip of cap board
+        - "AECS" text in maroon bold serif to the right
+      */}
       <svg
-        viewBox="0 0 80 80"
+        viewBox="0 0 60 56"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
-        style={{ height: h, width: h }}
+        style={{ height: h, width: h * (60 / 56) }}
         aria-hidden="true"
       >
-        {/* Open Book — bottom layer */}
-        <g className="logo-book">
-          {/* Left page */}
-          <path
-            d="M8 58 C8 58 10 70 40 70 L40 48 C18 48 8 58 8 58Z"
-            fill={maroon} opacity="0.9"
-          />
-          {/* Right page */}
-          <path
-            d="M72 58 C72 58 70 70 40 70 L40 48 C62 48 72 58 72 58Z"
-            fill={maroon} opacity="0.55"
-          />
-          {/* Spine */}
-          <line x1="40" y1="48" x2="40" y2="70" stroke={gold} strokeWidth="1.5" />
-          {/* Page lines left */}
-          <line x1="16" y1="58" x2="34" y2="56" stroke="rgba(255,255,255,0.35)" strokeWidth="1.1" strokeLinecap="round"/>
-          <line x1="15" y1="62" x2="33" y2="60" stroke="rgba(255,255,255,0.25)" strokeWidth="1"   strokeLinecap="round"/>
-          {/* Page lines right */}
-          <line x1="46" y1="56" x2="64" y2="58" stroke="rgba(255,255,255,0.2)" strokeWidth="1"   strokeLinecap="round"/>
-          <line x1="47" y1="60" x2="65" y2="62" stroke="rgba(255,255,255,0.15)" strokeWidth="1"  strokeLinecap="round"/>
-        </g>
+        {/* OPEN BOOK — bottom of icon */}
+        <path d="M30 38 Q16 33 3 35 L3 44 Q16 42 30 46 Z" fill={iconColor} />
+        <path d="M30 38 Q44 33 57 35 L57 44 Q44 42 30 46 Z" fill={iconColor} />
+        <path d="M3 44 Q16 46 30 50 Q44 46 57 44 L57 46 Q44 49 30 53 Q16 49 3 46 Z" fill={iconColor} />
+        <line x1="30" y1="37" x2="30" y2="52" stroke={inverted ? 'rgba(0,0,0,0.25)' : 'rgba(255,255,255,0.35)'} strokeWidth="1.5" />
 
-        {/* Graduation Cap — top layer */}
-        <g className="logo-cap">
-          {/* Board */}
-          <polygon points="40,10 72,26 40,42 8,26" fill={maroon} />
-          {/* Highlight sheen */}
-          <polygon points="40,10 72,26 60,30 40,16" fill="rgba(255,255,255,0.12)" />
-          {/* Left wing hanging */}
-          <path d="M20,32 L20,48 C20,56 40,58 40,58 L40,44" fill={maroon} opacity="0.75" />
-          {/* Right wing */}
-          <path d="M60,32 L60,48 C60,56 40,58 40,58 L40,44" fill={maroon} opacity="0.45" />
-          {/* Tassel cord */}
-          <line x1="72" y1="26" x2="72" y2="44" stroke={gold} strokeWidth="2.2" strokeLinecap="round"/>
-          {/* Tassel knob */}
-          <circle cx="72" cy="47" r="3.5" fill={gold} />
-          {/* Tassel fringe */}
-          <line x1="70" y1="47" x2="68" y2="54" stroke={gold} strokeWidth="1.2" strokeLinecap="round" opacity="0.7"/>
-          <line x1="72" y1="47" x2="72" y2="55" stroke={gold} strokeWidth="1.2" strokeLinecap="round" opacity="0.7"/>
-          <line x1="74" y1="47" x2="76" y2="54" stroke={gold} strokeWidth="1.2" strokeLinecap="round" opacity="0.7"/>
-        </g>
+        {/* GRADUATION CAP — mortarboard flat top */}
+        <polygon points="30,3 57,15 30,27 3,15" fill={iconColor} />
+        {/* Cap dome/hood */}
+        <path d="M16,17 L16,30 Q16,37 30,37 Q44,37 44,30 L44,17" fill={iconColor} />
+        {/* Subtle top-face sheen */}
+        <polygon points="30,3 57,15 47,19 30,8" fill={inverted ? 'rgba(0,0,0,0.07)' : 'rgba(255,255,255,0.07)'} />
+
+        {/* TASSEL */}
+        <line x1="57" y1="15" x2="57" y2="27" stroke={iconColor} strokeWidth="2.5" strokeLinecap="round" />
+        <circle cx="57" cy="29.5" r="3" fill={iconColor} />
+        <line x1="54.5" y1="29.5" x2="52" y2="37" stroke={iconColor} strokeWidth="1.5" strokeLinecap="round" />
+        <line x1="57" y1="29.5" x2="57" y2="38" stroke={iconColor} strokeWidth="1.5" strokeLinecap="round" />
+        <line x1="59.5" y1="29.5" x2="61" y2="37" stroke={iconColor} strokeWidth="1.5" strokeLinecap="round" />
       </svg>
 
-      {/* ── TEXT BLOCK ── */}
-      <div className="flex flex-col leading-none" style={{ gap: 3 }}>
-        <span
-          className="logo-name font-display font-bold"
-          style={{
-            fontFamily: "'Cormorant Garamond', Georgia, serif",
-            fontSize: h * 0.52,
-            color: maroon,
-            lineHeight: 1,
-            letterSpacing: '-0.01em',
-          }}
-        >
-          AECS
-        </span>
-        <span
-          className="logo-sub font-label font-semibold uppercase"
-          style={{
-            fontFamily: "'Montserrat', sans-serif",
-            fontSize: h * 0.175,
-            letterSpacing: '0.22em',
-            color: navy,
-            lineHeight: 1,
-          }}
-        >
-          Academy
-        </span>
-      </div>
+      {/* AECS text — bold maroon serif, matching logo typography */}
+      <span
+        style={{
+          fontFamily: "'Georgia', 'Times New Roman', serif",
+          fontSize: h * 0.6,
+          color: textColor,
+          lineHeight: 1,
+          fontWeight: 700,
+          letterSpacing: '0.02em',
+        }}
+      >
+        AECS
+      </span>
     </div>
   );
 }

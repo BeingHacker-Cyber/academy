@@ -1,110 +1,201 @@
+"use client";
 import React from 'react';
 import Link from 'next/link';
-import { Phone, Mail, MapPin, Instagram, Facebook, Linkedin, ArrowRight } from 'lucide-react';
+import { Phone, Mail, MapPin, Instagram, Facebook, Youtube, ArrowRight } from 'lucide-react';
 import AECSLogo from './AECSLogo';
 
 const navLinks = [
-  { name: 'Home',    href: '/'        },
-  { name: 'About AECS',   href: '/about'   },
-  { name: 'Expert Faculty', href: '/faculty' },
-  { name: 'Student Gallery', href: '/gallery' },
-  { name: 'Enrollment', href: '/register' },
-  { name: 'Contact Us', href: '/contact' },
+  { name: 'Home',            href: '/'         },
+  { name: 'About AECS',      href: '/about'    },
+  { name: 'Expert Faculty',  href: '/faculty'  },
+  { name: 'Student Gallery', href: '/gallery'  },
+  { name: 'Enrollment',      href: '/register' },
+  { name: 'Contact Us',      href: '/contact'  },
+];
+
+const subjects = [
+  'Mathematics', 'English', 'Physics', 'Chemistry',
+  'Biology', 'Computer Science', 'Business Studies', 'Economics',
+];
+
+const socials = [
+  { icon: Instagram, label: 'Instagram', href: '#' },
+  { icon: Facebook,  label: 'Facebook',  href: '#' },
+  { icon: Youtube,   label: 'YouTube',   href: '#' },
 ];
 
 export default function Footer() {
+  const year = new Date().getFullYear();
+
   return (
-    <footer className="bg-secondary text-secondary-foreground pt-20 pb-10">
-      <div className="container mx-auto px-4 max-w-7xl">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-16">
-          
-          {/* Academy Info */}
-          <div className="md:col-span-1">
-            <AECSLogo inverted className="mb-6 h-10 invert brightness-200" />
-            <p className="text-secondary-foreground/70 leading-relaxed mb-6 font-body">
-              A specialized academy for Cambridge IGCSE and O-Level studies, fostering excellence through conceptual clarity and personalized attention.
+    <footer style={{ fontFamily: "'Montserrat', sans-serif" }}>
+
+      {/* ── CTA STRIP ── */}
+      <div style={{ background: '#7B1C2E' }}>
+        <div className="container mx-auto px-6 max-w-7xl" style={{ padding: '4rem 1.5rem' }}>
+          <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: '2rem', flexWrap: 'wrap' }}>
+            <div>
+              <p style={{ fontFamily: "'Montserrat', sans-serif", fontSize: '9px', fontWeight: 600, letterSpacing: '0.32em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.4)', marginBottom: '0.75rem' }}>
+                Admissions Open — {year}
+              </p>
+              <h2 style={{ fontFamily: "'Georgia', 'Times New Roman', serif", fontSize: 'clamp(1.8rem, 3vw, 2.6rem)', fontWeight: 700, color: '#fff', lineHeight: 1.1 }}>
+                Ready to Begin Your Cambridge Journey?
+              </h2>
+            </div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+              <Link
+                href="/register"
+                style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '13px 26px', background: '#fff', color: '#7B1C2E', fontFamily: "'Montserrat', sans-serif", fontSize: '9px', fontWeight: 700, letterSpacing: '0.2em', textTransform: 'uppercase', textDecoration: 'none', transition: 'opacity 0.2s' }}
+              >
+                Enroll Now <ArrowRight size={12} />
+              </Link>
+              <a
+                href="tel:03144033054"
+                style={{ display: 'inline-flex', alignItems: 'center', padding: '13px 26px', border: '1px solid rgba(255,255,255,0.3)', color: '#fff', fontFamily: "'Montserrat', sans-serif", fontSize: '9px', fontWeight: 600, letterSpacing: '0.2em', textTransform: 'uppercase', textDecoration: 'none' }}
+              >
+                Call Us
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* ── MAIN FOOTER ── */}
+      <div style={{ background: '#FAF7F2', borderTop: '1px solid rgba(123,28,46,0.08)' }}>
+        <div className="container mx-auto px-6 max-w-7xl" style={{ paddingTop: '5rem', paddingBottom: '3rem' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: '2fr 1.2fr 1fr 1.6fr', gap: '3rem', marginBottom: '4rem' }}>
+
+            {/* Brand */}
+            <div>
+              <AECSLogo size="md" className="mb-6" />
+              <p style={{ fontFamily: "'Montserrat', sans-serif", fontSize: '12px', fontWeight: 300, lineHeight: 1.85, color: 'rgba(26,26,26,0.45)', margin: '1.25rem 0 2rem', maxWidth: 280 }}>
+                Lahore's most focused IGCSE &amp; O-Level academy — specialised Cambridge coaching from Grade 6 to O-Level with 100% personalised attention.
+              </p>
+              <div style={{ display: 'flex', gap: 10 }}>
+                {socials.map(({ icon: Icon, label, href }) => (
+                  <a
+                    key={label}
+                    href={href}
+                    aria-label={label}
+                    style={{ width: 38, height: 38, border: '1px solid rgba(123,28,46,0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'rgba(26,26,26,0.35)', textDecoration: 'none', transition: 'all 0.25s' }}
+                    onMouseEnter={e => { (e.currentTarget as HTMLElement).style.background = '#7B1C2E'; (e.currentTarget as HTMLElement).style.borderColor = '#7B1C2E'; (e.currentTarget as HTMLElement).style.color = '#fff'; }}
+                    onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = 'transparent'; (e.currentTarget as HTMLElement).style.borderColor = 'rgba(123,28,46,0.15)'; (e.currentTarget as HTMLElement).style.color = 'rgba(26,26,26,0.35)'; }}
+                  >
+                    <Icon size={15} />
+                  </a>
+                ))}
+              </div>
+            </div>
+
+            {/* Navigation */}
+            <div>
+              <h4 style={{ fontFamily: "'Montserrat', sans-serif", fontSize: '9px', fontWeight: 700, letterSpacing: '0.32em', textTransform: 'uppercase', color: '#7B1C2E', marginBottom: '1.5rem' }}>
+                Navigation
+              </h4>
+              <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
+                {navLinks.map((link) => (
+                  <li key={link.name} style={{ marginBottom: '10px' }}>
+                    <Link
+                      href={link.href}
+                      style={{ display: 'inline-flex', alignItems: 'center', gap: 8, fontFamily: "'Montserrat', sans-serif", fontSize: '12px', fontWeight: 400, color: 'rgba(26,26,26,0.45)', textDecoration: 'none', transition: 'color 0.2s' }}
+                      onMouseEnter={e => { (e.currentTarget as HTMLElement).style.color = '#7B1C2E'; }}
+                      onMouseLeave={e => { (e.currentTarget as HTMLElement).style.color = 'rgba(26,26,26,0.45)'; }}
+                    >
+                      {link.name}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            {/* Subjects */}
+            <div>
+              <h4 style={{ fontFamily: "'Montserrat', sans-serif", fontSize: '9px', fontWeight: 700, letterSpacing: '0.32em', textTransform: 'uppercase', color: '#7B1C2E', marginBottom: '1.5rem' }}>
+                Subjects
+              </h4>
+              <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
+                {subjects.map((sub) => (
+                  <li key={sub} style={{ fontFamily: "'Montserrat', sans-serif", fontSize: '12px', fontWeight: 300, color: 'rgba(26,26,26,0.4)', marginBottom: '9px' }}>
+                    {sub}
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            {/* Contact */}
+            <div>
+              <h4 style={{ fontFamily: "'Montserrat', sans-serif", fontSize: '9px', fontWeight: 700, letterSpacing: '0.32em', textTransform: 'uppercase', color: '#7B1C2E', marginBottom: '1.5rem' }}>
+                Contact
+              </h4>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+                {[
+                  {
+                    icon: MapPin,
+                    label: 'Campus',
+                    value: '100 Platinum Homes, Al Kabir Town Phase 2, Near Lake City Raiwind Road, Lahore',
+                    href: undefined,
+                  },
+                  {
+                    icon: Phone,
+                    label: 'Phone',
+                    value: '0314 4033054',
+                    href: 'tel:03144033054',
+                  },
+                  {
+                    icon: Mail,
+                    label: 'Email',
+                    value: 'Hassani854@gmail.com',
+                    href: 'mailto:Hassani854@gmail.com',
+                  },
+                ].map(({ icon: Icon, label, value, href }) => (
+                  <div key={label} style={{ display: 'flex', gap: 14, alignItems: 'flex-start' }}>
+                    <div style={{ width: 32, height: 32, background: 'rgba(123,28,46,0.07)', border: '1px solid rgba(123,28,46,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginTop: 1 }}>
+                      <Icon size={14} style={{ color: '#7B1C2E' }} />
+                    </div>
+                    <div>
+                      <p style={{ fontFamily: "'Montserrat', sans-serif", fontSize: '8px', fontWeight: 600, letterSpacing: '0.24em', textTransform: 'uppercase', color: 'rgba(26,26,26,0.28)', marginBottom: 4 }}>{label}</p>
+                      {href ? (
+                        <a href={href} style={{ fontFamily: "'Montserrat', sans-serif", fontSize: '12px', fontWeight: 300, color: 'rgba(26,26,26,0.55)', textDecoration: 'none', transition: 'color 0.2s' }}
+                          onMouseEnter={e => { (e.currentTarget as HTMLElement).style.color = '#7B1C2E'; }}
+                          onMouseLeave={e => { (e.currentTarget as HTMLElement).style.color = 'rgba(26,26,26,0.55)'; }}>
+                          {value}
+                        </a>
+                      ) : (
+                        <p style={{ fontFamily: "'Montserrat', sans-serif", fontSize: '12px', fontWeight: 300, color: 'rgba(26,26,26,0.55)', lineHeight: 1.6 }}>{value}</p>
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* Divider */}
+          <div style={{ height: 1, background: 'rgba(123,28,46,0.08)', marginBottom: '1.75rem', position: 'relative' }}>
+            <div style={{ position: 'absolute', left: 0, top: 0, width: 80, height: 1, background: '#7B1C2E', opacity: 0.5 }} />
+          </div>
+
+          {/* Bottom bar */}
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '1rem', flexWrap: 'wrap' }}>
+            <p style={{ fontFamily: "'Montserrat', sans-serif", fontSize: '11px', fontWeight: 300, color: 'rgba(26,26,26,0.3)' }}>
+              © {year} AECS Academy — Academy for Excellence in Cambridge Studies. All rights reserved.
             </p>
-            <div className="flex gap-4">
+            <div style={{ display: 'flex', gap: '1.5rem' }}>
               {[
-                { icon: Instagram, label: 'Instagram' },
-                { icon: Facebook,  label: 'Facebook'  },
-                { icon: Linkedin,  label: 'LinkedIn'  },
-              ].map(({ icon: Icon, label }) => (
+                { label: 'Privacy Policy',   href: '/privacy-policy'      },
+                { label: 'Terms of Service', href: '/terms-and-conditions' },
+              ].map(({ label, href }) => (
                 <Link
                   key={label}
-                  href="#"
-                  className="p-2 bg-white/10 rounded-full hover:bg-accent hover:text-accent-foreground transition-all"
+                  href={href}
+                  style={{ fontFamily: "'Montserrat', sans-serif", fontSize: '11px', fontWeight: 300, color: 'rgba(26,26,26,0.3)', textDecoration: 'none', transition: 'color 0.2s' }}
+                  onMouseEnter={e => { (e.currentTarget as HTMLElement).style.color = '#7B1C2E'; }}
+                  onMouseLeave={e => { (e.currentTarget as HTMLElement).style.color = 'rgba(26,26,26,0.3)'; }}
                 >
-                  <Icon size={18} />
+                  {label}
                 </Link>
               ))}
             </div>
-          </div>
-
-          {/* Navigation */}
-          <div>
-            <h4 className="text-accent font-accent uppercase tracking-widest text-sm font-bold mb-8">Navigation</h4>
-            <ul className="space-y-4">
-              {navLinks.map((link) => (
-                <li key={link.name}>
-                  <Link
-                    href={link.href}
-                    className="text-secondary-foreground/70 hover:text-white flex items-center gap-2 group transition-all"
-                  >
-                    <ArrowRight size={14} className="opacity-0 group-hover:opacity-100 transition-all -translate-x-2 group-hover:translate-x-0" />
-                    {link.name}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* Contact Details */}
-          <div className="md:col-span-2">
-            <h4 className="text-accent font-accent uppercase tracking-widest text-sm font-bold mb-8">Get In Touch</h4>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
-              <div className="flex gap-4">
-                <div className="bg-primary/20 p-3 rounded-lg h-fit">
-                  <MapPin className="text-primary" size={20} />
-                </div>
-                <div>
-                  <h5 className="font-bold text-white mb-1">Campus Location</h5>
-                  <p className="text-secondary-foreground/70 text-sm leading-relaxed">
-                    100 Platinum Homes, Al Kabir Town Phase 2, Near Lake City Raiwind Road, Lahore
-                  </p>
-                </div>
-              </div>
-              <div className="flex gap-4">
-                <div className="bg-primary/20 p-3 rounded-lg h-fit">
-                  <Phone className="text-primary" size={20} />
-                </div>
-                <div>
-                  <h5 className="font-bold text-white mb-1">Phone Enquiries</h5>
-                  <p className="text-secondary-foreground/70 text-sm">0314 4033054</p>
-                </div>
-              </div>
-              <div className="flex gap-4">
-                <div className="bg-primary/20 p-3 rounded-lg h-fit">
-                  <Mail className="text-primary" size={20} />
-                </div>
-                <div>
-                  <h5 className="font-bold text-white mb-1">Email Support</h5>
-                  <p className="text-secondary-foreground/70 text-sm">Hassani854@gmail.com</p>
-                </div>
-              </div>
-            </div>
-          </div>
-
-        </div>
-
-        {/* Bottom Bar */}
-        <div className="pt-10 border-t border-white/10 flex flex-col md:flex-row justify-between items-center gap-4">
-          <p className="text-secondary-foreground/50 text-xs">
-            © {new Date().getFullYear()} AECS Academy (Academy for Excellence in Cambridge Studies). All rights reserved.
-          </p>
-          <div className="flex gap-6 text-xs text-secondary-foreground/50">
-            <Link href="/privacy-policy" className="hover:text-white transition-colors">Privacy Policy</Link>
-            <Link href="/terms-and-conditions" className="hover:text-white transition-colors">Terms of Service</Link>
           </div>
         </div>
       </div>

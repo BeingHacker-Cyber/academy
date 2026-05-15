@@ -1,455 +1,464 @@
 "use client";
-
 import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import {
-  CheckCircle2, Users, GraduationCap, Award,
-  ArrowRight, BookOpen, TrendingUp, Lightbulb,
-  Star, ShieldCheck, Monitor, Building2, MapPin,
-  ChevronRight, Sparkles, Trophy, Clock,
+  ArrowRight, CheckCircle2, Users, GraduationCap,
+  Award, BookOpen, Star, TrendingUp, Lightbulb,
+  ShieldCheck, Monitor, Building2, MapPin, Phone, Trophy,
 } from 'lucide-react';
 import { PlaceHolderImages } from '@/app/lib/placeholder-images';
 
+/* ─────────────────────────────────────────────
+   DATA
+───────────────────────────────────────────── */
 const stats = [
-  { label: 'Enrolled Students', value: '500+',         icon: Users         },
-  { label: 'Expert Faculty',    value: '15+',           icon: GraduationCap },
-  { label: 'Grade Range',       value: '6 – O Level',  icon: BookOpen      },
-  { label: 'Success Rate',      value: '100%',          icon: Award         },
+  { value: '500+', label: 'Students Enrolled',  icon: Users         },
+  { value: '15+',  label: 'Expert Faculty',      icon: GraduationCap },
+  { value: '10+',  label: 'Years of Excellence', icon: Award         },
+  { value: '100%', label: 'Success Rate',        icon: Trophy        },
 ];
 
-const values = [
-  { title: 'Expert Mentorship',  desc: 'Cambridge-certified educators with decades of O-Level exam experience.',      icon: Star,       num: '01' },
-  { title: 'Personalised Focus', desc: 'Small batches ensure every student receives dedicated conceptual guidance.',   icon: Lightbulb,  num: '02' },
-  { title: 'Proven Results',     desc: 'A legacy of A* and A grades in IGCSE/O-Level examinations year after year.',  icon: TrendingUp, num: '03' },
-  { title: 'Curriculum Mastery', desc: 'Deep subject expertise aligned precisely with the Cambridge IGCSE syllabus.', icon: ShieldCheck, num: '04' },
+const pillars = [
+  {
+    num: '01',
+    title: 'Expert Mentorship',
+    desc: 'Cambridge-certified educators with decades of O-Level exam experience.',
+    icon: Star,
+  },
+  {
+    num: '02',
+    title: 'Personalised Focus',
+    desc: 'Small batches ensure every student gets dedicated conceptual guidance.',
+    icon: Lightbulb,
+  },
+  {
+    num: '03',
+    title: 'Proven Results',
+    desc: 'A legacy of A* and A grades in IGCSE & O-Level year after year.',
+    icon: TrendingUp,
+  },
+  {
+    num: '04',
+    title: 'Curriculum Mastery',
+    desc: 'Deep subject expertise aligned precisely with the Cambridge syllabus.',
+    icon: ShieldCheck,
+  },
 ];
 
 const subjects = [
-  'Mathematics','English','Physics','Chemistry','Biology',
-  'Pak Studies','Islamiat','Business Studies','Accounting',
-  'Economics','Computer Science',
+  'Mathematics', 'English', 'Physics', 'Chemistry', 'Biology',
+  'Computer Science', 'Business Studies', 'Economics',
+  'Accounting', 'Pak Studies', 'Islamiat',
 ];
 
-const tickerItems = [
-  'IGCSE Specialists','O-Level Experts','Grade 6–11 Coverage','Online & On-Campus',
-  'Lahore Lake City','100% Success Rate','Cambridge Certified','Small Batch Sizes',
-];
-
+/* ─────────────────────────────────────────────
+   COMPONENT
+───────────────────────────────────────────── */
 export default function Home() {
   const heroImg      = PlaceHolderImages.find(i => i.id === 'hero-bg');
   const classroomImg = PlaceHolderImages.find(i => i.id === 'classroom');
 
   return (
-    <div className="flex flex-col min-h-screen overflow-x-hidden" style={{ fontFamily: "'Cormorant Garamond', 'Playfair Display', Georgia, serif" }}>
+    <div style={{ fontFamily: "'Montserrat', sans-serif", background: '#fff', color: '#1a1a1a' }}>
 
-      {/* ══════════════════════════════════
-          HERO
-      ══════════════════════════════════ */}
-      <section
-        className="relative min-h-screen flex items-center pt-24 overflow-hidden"
-        style={{ background: 'linear-gradient(135deg, #0b1628 0%, #1a0a0e 50%, #0e0e1a 100%)' }}
-      >
-        {/* Grain overlay */}
-        <div className="absolute inset-0 opacity-[0.03] pointer-events-none"
-          style={{ backgroundImage: "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E\")", backgroundSize: '200px' }} />
+      {/* ══════════════════════════════════════
+          1. HERO  — split layout, cream left panel
+      ══════════════════════════════════════ */}
+      <section style={{ background: '#FAF7F2', minHeight: '92vh', display: 'flex', alignItems: 'center', borderBottom: '1px solid rgba(123,28,46,0.08)' }}>
+        <div className="container mx-auto max-w-7xl" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 0, minHeight: '92vh' }}>
 
-        {/* Large decorative gold circle */}
-        <div className="absolute right-[-10%] top-[10%] w-[700px] h-[700px] rounded-full border border-[#C8960C]/8 pointer-events-none" />
-        <div className="absolute right-[2%] top-[18%] w-[500px] h-[500px] rounded-full border border-[#C8960C]/12 pointer-events-none" />
+          {/* LEFT — text */}
+          <div style={{ padding: '6rem 4rem 4rem 2rem', display: 'flex', flexDirection: 'column', justifyContent: 'center', borderRight: '1px solid rgba(123,28,46,0.08)' }}>
 
-        {/* Corner ornament */}
-        <div className="absolute top-28 left-8 w-24 h-24 opacity-20 pointer-events-none">
-          <svg viewBox="0 0 96 96" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M0 96 L0 0 L96 0" stroke="#C8960C" strokeWidth="1" fill="none" />
-            <path d="M16 96 L16 16 L96 16" stroke="#C8960C" strokeWidth="0.5" fill="none" />
-          </svg>
-        </div>
-        <div className="absolute bottom-16 right-8 w-24 h-24 opacity-20 rotate-180 pointer-events-none">
-          <svg viewBox="0 0 96 96" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M0 96 L0 0 L96 0" stroke="#C8960C" strokeWidth="1" fill="none" />
-          </svg>
-        </div>
-
-        <div className="container mx-auto px-6 max-w-7xl relative z-10 py-20">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-
-            {/* LEFT */}
-            <div className="space-y-8">
-              <div className="flex items-center gap-3">
-                <div className="h-px w-8 bg-[#C8960C]" />
-                <span className="text-[#C8960C] tracking-[0.35em] text-[10px] font-sans font-semibold uppercase">
-                  Lake City · Lahore · Est. 2014
-                </span>
+            {/* Year tag */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: '2.5rem' }}>
+              <div style={{ width: 32, height: 32, background: '#7B1C2E', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <BookOpen size={15} color="#fff" />
               </div>
-
-              <h1 style={{ fontFamily: "'Cormorant Garamond', Georgia, serif", fontSize: 'clamp(3.2rem, 7vw, 5.8rem)', lineHeight: '1.02', fontWeight: 700 }}
-                className="text-white">
-                Excellence<br />
-                <span style={{ color: '#C8960C', fontStyle: 'italic' }}>in Cambridge</span><br />
-                Education
-              </h1>
-
-              <p className="text-white/50 text-lg leading-relaxed max-w-lg font-sans" style={{ fontFamily: "'Inter', 'Helvetica Neue', sans-serif", fontWeight: 300 }}>
-                Lahore's most focused IGCSE & O-Level academy — specialised coaching
-                from Grade 6 to O-Level with 100% personalised attention.
-              </p>
-
-              <div className="flex gap-3 flex-wrap">
-                {[
-                  { icon: Monitor,   label: 'Online Classes' },
-                  { icon: Building2, label: 'On Campus'      },
-                ].map(({ icon: Icon, label }) => (
-                  <span key={label}
-                    className="flex items-center gap-2 px-5 py-2.5 rounded-full border text-white/70 font-sans text-xs tracking-widest uppercase"
-                    style={{ borderColor: 'rgba(200,150,12,0.3)', background: 'rgba(200,150,12,0.06)', fontFamily: "'Inter', sans-serif" }}>
-                    <Icon size={12} className="text-[#C8960C]" />
-                    {label}
-                  </span>
-                ))}
-              </div>
-
-              <div className="flex gap-4 pt-2">
-                <Link href="/register"
-                  className="group flex items-center gap-3 px-8 py-4 rounded-full font-sans text-sm font-semibold tracking-widest uppercase transition-all duration-300 hover:gap-4"
-                  style={{ background: '#C8960C', color: '#0b1628', fontFamily: "'Inter', sans-serif", letterSpacing: '0.1em' }}>
-                  Apply Now
-                  <ArrowRight size={16} className="transition-transform duration-300 group-hover:translate-x-1" />
-                </Link>
-                <Link href="/about"
-                  className="flex items-center gap-2 px-8 py-4 rounded-full font-sans text-sm font-semibold tracking-widest uppercase transition-all duration-300 hover:bg-white/5"
-                  style={{ border: '1px solid rgba(255,255,255,0.2)', color: 'rgba(255,255,255,0.7)', fontFamily: "'Inter', sans-serif", letterSpacing: '0.1em' }}>
-                  Learn More
-                </Link>
-              </div>
-
-              {/* Mini stats */}
-              <div className="flex gap-10 pt-4 border-t border-white/8">
-                {[
-                  { val: '500+', lbl: 'Students' },
-                  { val: '15+',  lbl: 'Faculty'  },
-                  { val: 'A*',   lbl: 'Avg Grade' },
-                ].map(({ val, lbl }) => (
-                  <div key={lbl}>
-                    <p style={{ fontFamily: "'Cormorant Garamond', Georgia, serif", fontSize: '2.2rem', fontWeight: 700, color: '#C8960C', lineHeight: 1 }}>{val}</p>
-                    <p className="text-white/35 text-[9px] tracking-[0.3em] uppercase font-sans mt-1.5" style={{ fontFamily: "'Inter', sans-serif" }}>{lbl}</p>
-                  </div>
-                ))}
-              </div>
+              <span style={{ fontFamily: "'Montserrat', sans-serif", fontSize: '9px', fontWeight: 700, letterSpacing: '0.32em', textTransform: 'uppercase', color: '#7B1C2E' }}>
+                Est. 2014 · Lake City, Lahore
+              </span>
             </div>
 
-            {/* RIGHT — image */}
-            <div className="relative">
-              <div className="relative aspect-[4/4.5] rounded-3xl overflow-hidden"
-                style={{ boxShadow: '0 40px 100px rgba(0,0,0,0.6), 0 0 0 1px rgba(200,150,12,0.15)' }}>
-                <Image src={heroImg?.imageUrl ?? ''} alt="AECS Academy" fill className="object-cover" priority />
-                <div className="absolute inset-0" style={{ background: 'linear-gradient(to top, rgba(11,22,40,0.7) 0%, transparent 60%)' }} />
-                <div className="absolute inset-0" style={{ background: 'linear-gradient(135deg, rgba(123,28,46,0.15) 0%, transparent 60%)' }} />
-              </div>
+            <h1 style={{ fontFamily: "'Georgia', 'Times New Roman', serif", fontSize: 'clamp(3rem, 5.5vw, 5.2rem)', fontWeight: 700, lineHeight: 1.0, color: '#1a1a1a', marginBottom: '1.5rem' }}>
+              Cambridge<br />
+              <span style={{ color: '#7B1C2E' }}>Excellence,</span><br />
+              Delivered.
+            </h1>
 
-              {/* Floating card */}
-              <div className="absolute -bottom-6 -left-6 rounded-2xl p-5 hidden md:flex items-center gap-4"
-                style={{ background: 'rgba(11,22,40,0.95)', border: '1px solid rgba(200,150,12,0.25)', backdropFilter: 'blur(20px)', boxShadow: '0 20px 60px rgba(0,0,0,0.4)' }}>
-                <div className="w-12 h-12 rounded-full flex items-center justify-center" style={{ background: 'rgba(200,150,12,0.15)', border: '1px solid rgba(200,150,12,0.3)' }}>
-                  <Trophy size={22} style={{ color: '#C8960C' }} />
-                </div>
-                <div>
-                  <p style={{ fontFamily: "'Cormorant Garamond', Georgia, serif", fontSize: '1.4rem', fontWeight: 700, color: 'white', lineHeight: 1 }}>A* Grade</p>
-                  <p className="text-white/40 text-[9px] tracking-[0.3em] uppercase font-sans mt-1" style={{ fontFamily: "'Inter', sans-serif" }}>Avg Performance</p>
-                </div>
-              </div>
+            {/* Thick rule */}
+            <div style={{ width: 48, height: 3, background: '#7B1C2E', marginBottom: '1.75rem' }} />
 
-              {/* Years badge */}
-              <div className="absolute -top-5 -right-5 w-20 h-20 rounded-full hidden md:flex flex-col items-center justify-center text-center"
-                style={{ background: '#7B1C2E', border: '2px solid rgba(200,150,12,0.4)', boxShadow: '0 8px 32px rgba(123,28,46,0.5)' }}>
-                <span style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: '1.5rem', fontWeight: 700, color: 'white', lineHeight: 1 }}>10+</span>
-                <span className="text-[7px] tracking-widest uppercase font-sans text-white/60" style={{ fontFamily: "'Inter', sans-serif" }}>Yrs</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ══════════════════════════════════
-          TICKER
-      ══════════════════════════════════ */}
-      <div className="overflow-hidden py-4" style={{ background: '#7B1C2E', borderTop: '1px solid rgba(200,150,12,0.2)', borderBottom: '1px solid rgba(200,150,12,0.2)' }}>
-        <div className="flex gap-0 animate-marquee whitespace-nowrap" style={{ animation: 'marquee 30s linear infinite' }}>
-          {[...tickerItems, ...tickerItems, ...tickerItems].map((item, i) => (
-            <React.Fragment key={i}>
-              <span className="font-sans text-[10px] uppercase tracking-[0.25em] font-semibold text-white/80 px-8 whitespace-nowrap" style={{ fontFamily: "'Inter', sans-serif" }}>{item}</span>
-              <span style={{ color: '#C8960C', margin: '0 4px' }}>✦</span>
-            </React.Fragment>
-          ))}
-        </div>
-        <style>{`@keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-33.33%); } }`}</style>
-      </div>
-
-      {/* ══════════════════════════════════
-          STATS BAR
-      ══════════════════════════════════ */}
-      <section className="py-16" style={{ background: '#faf8f4', borderBottom: '1px solid rgba(123,28,46,0.08)' }}>
-        <div className="container mx-auto px-6 max-w-7xl">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-0">
-            {stats.map((s, i) => (
-              <div key={i} className={`text-center py-6 px-8 ${i < 3 ? 'border-r border-[rgba(123,28,46,0.08)]' : ''}`}>
-                <div className="w-12 h-12 rounded-2xl flex items-center justify-center mx-auto mb-4"
-                  style={{ background: 'rgba(123,28,46,0.07)' }}>
-                  <s.icon size={22} style={{ color: '#7B1C2E' }} />
-                </div>
-                <p style={{ fontFamily: "'Cormorant Garamond', Georgia, serif", fontSize: '2.8rem', fontWeight: 700, color: '#0b1628', lineHeight: 1 }}>{s.value}</p>
-                <p className="font-sans text-[9px] uppercase tracking-[0.3em] mt-2" style={{ color: 'rgba(11,22,40,0.4)', fontFamily: "'Inter', sans-serif" }}>{s.label}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ══════════════════════════════════
-          WHY AECS
-      ══════════════════════════════════ */}
-      <section className="py-28" style={{ background: '#fff' }}>
-        <div className="container mx-auto px-6 max-w-7xl">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 mb-20 items-end">
-            <div className="lg:col-span-7">
-              <div className="flex items-center gap-3 mb-6">
-                <div className="h-px w-8 bg-[#C8960C]" />
-                <span className="text-[#C8960C] tracking-[0.35em] text-[10px] font-sans font-semibold uppercase" style={{ fontFamily: "'Inter', sans-serif" }}>Foundation for Brilliance</span>
-              </div>
-              <h2 style={{ fontFamily: "'Cormorant Garamond', Georgia, serif", fontSize: 'clamp(2.5rem, 5vw, 4rem)', fontWeight: 700, color: '#0b1628', lineHeight: 1.05 }}>
-                Why Choose<br />
-                <span style={{ color: '#7B1C2E', fontStyle: 'italic' }}>AECS Academy?</span>
-              </h2>
-            </div>
-            <p className="lg:col-span-5 text-lg leading-relaxed font-sans" style={{ color: 'rgba(11,22,40,0.55)', fontFamily: "'Inter', sans-serif", fontWeight: 300 }}>
-              A structured, supportive environment designed specifically for the rigorous Cambridge
-              curriculum — where every student's potential is fully realised.
+            <p style={{ fontSize: '14px', fontWeight: 300, lineHeight: 1.9, color: 'rgba(26,26,26,0.55)', marginBottom: '2.5rem', maxWidth: 400 }}>
+              Lahore's most focused IGCSE &amp; O-Level academy — specialised coaching from Grade 6 through O-Level with 100% personalised attention and proven results.
             </p>
-          </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {values.map((v, i) => (
-              <div key={i} className="group relative p-8 rounded-3xl transition-all duration-500 hover:-translate-y-2"
-                style={{ background: '#faf8f4', border: '1px solid rgba(123,28,46,0.07)' }}
-                onMouseEnter={e => { (e.currentTarget as HTMLElement).style.boxShadow = '0 24px 60px rgba(123,28,46,0.12)'; (e.currentTarget as HTMLElement).style.borderColor = 'rgba(200,150,12,0.3)'; }}
-                onMouseLeave={e => { (e.currentTarget as HTMLElement).style.boxShadow = 'none'; (e.currentTarget as HTMLElement).style.borderColor = 'rgba(123,28,46,0.07)'; }}>
-                <div className="flex items-start justify-between mb-8">
-                  <div className="w-14 h-14 rounded-2xl flex items-center justify-center transition-all duration-300 group-hover:scale-110"
-                    style={{ background: 'rgba(123,28,46,0.08)' }}>
-                    <v.icon size={24} style={{ color: '#7B1C2E' }} />
-                  </div>
-                  <span style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: '3.5rem', fontWeight: 700, color: 'rgba(11,22,40,0.05)', lineHeight: 1 }}>{v.num}</span>
-                </div>
-                <h3 style={{ fontFamily: "'Cormorant Garamond', Georgia, serif", fontSize: '1.4rem', fontWeight: 700, color: '#0b1628', marginBottom: '0.75rem' }}>{v.title}</h3>
-                <p className="font-sans text-sm leading-relaxed" style={{ color: 'rgba(11,22,40,0.5)', fontFamily: "'Inter', sans-serif", fontWeight: 300 }}>{v.desc}</p>
-                <div className="absolute bottom-0 left-8 right-8 h-[2px] w-0 group-hover:w-[calc(100%-4rem)] rounded-full transition-all duration-500" style={{ background: 'linear-gradient(90deg, #7B1C2E, #C8960C)', bottom: 0 }} />
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ══════════════════════════════════
-          SUBJECTS
-      ══════════════════════════════════ */}
-      <section className="py-28" style={{ background: '#0b1628' }}>
-        <div className="container mx-auto px-6 max-w-7xl">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 items-center">
-
-            <div className="lg:col-span-5 space-y-8">
-              <div className="flex items-center gap-3">
-                <div className="h-px w-8 bg-[#C8960C]" />
-                <span className="text-[#C8960C] tracking-[0.35em] text-[10px] font-sans font-semibold uppercase" style={{ fontFamily: "'Inter', sans-serif" }}>Full Cambridge Curriculum</span>
-              </div>
-              <h2 style={{ fontFamily: "'Cormorant Garamond', Georgia, serif", fontSize: 'clamp(2.4rem, 4.5vw, 3.8rem)', fontWeight: 700, color: 'white', lineHeight: 1.05 }}>
-                Specialised<br />
-                <span style={{ color: '#C8960C', fontStyle: 'italic' }}>Subjects</span><br />
-                We Offer
-              </h2>
-              <p className="text-white/45 text-lg leading-relaxed font-sans" style={{ fontFamily: "'Inter', sans-serif", fontWeight: 300 }}>
-                From core sciences to business studies — the complete spectrum of the Cambridge IGCSE & O-Level curriculum, taught by subject experts.
-              </p>
-              <div className="flex flex-wrap gap-2.5">
-                {subjects.map((sub) => (
-                  <span key={sub}
-                    className="flex items-center gap-2 px-4 py-2.5 rounded-full font-sans text-[10px] uppercase tracking-wider font-semibold transition-all duration-300 cursor-default hover:-translate-y-0.5"
-                    style={{ background: 'rgba(200,150,12,0.08)', border: '1px solid rgba(200,150,12,0.2)', color: 'rgba(255,255,255,0.75)', fontFamily: "'Inter', sans-serif" }}
-                    onMouseEnter={e => { (e.currentTarget as HTMLElement).style.background = '#C8960C'; (e.currentTarget as HTMLElement).style.color = '#0b1628'; (e.currentTarget as HTMLElement).style.borderColor = '#C8960C'; }}
-                    onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = 'rgba(200,150,12,0.08)'; (e.currentTarget as HTMLElement).style.color = 'rgba(255,255,255,0.75)'; (e.currentTarget as HTMLElement).style.borderColor = 'rgba(200,150,12,0.2)'; }}>
-                    <CheckCircle2 size={10} style={{ color: '#C8960C' }} />
-                    {sub}
-                  </span>
-                ))}
-              </div>
-              <Link href="/register"
-                className="group inline-flex items-center gap-3 px-8 py-4 rounded-full font-sans text-sm font-semibold tracking-widest uppercase transition-all duration-300"
-                style={{ background: '#C8960C', color: '#0b1628', fontFamily: "'Inter', sans-serif", letterSpacing: '0.1em' }}>
-                Explore & Enroll
-                <ArrowRight size={16} className="transition-transform duration-300 group-hover:translate-x-1" />
-              </Link>
-            </div>
-
-            <div className="lg:col-span-7 relative">
-              <div className="relative aspect-[4/3] rounded-3xl overflow-hidden"
-                style={{ boxShadow: '0 40px 100px rgba(0,0,0,0.5)', border: '1px solid rgba(200,150,12,0.15)' }}>
-                <Image src={classroomImg?.imageUrl ?? ''} alt="AECS Classroom" fill className="object-cover" />
-                <div className="absolute inset-0" style={{ background: 'linear-gradient(to top, rgba(11,22,40,0.6) 0%, transparent 60%)' }} />
-              </div>
-              {/* Grade badge */}
-              <div className="absolute -bottom-8 -right-6 p-8 rounded-3xl text-center hidden md:block"
-                style={{ background: '#7B1C2E', border: '1px solid rgba(200,150,12,0.3)', boxShadow: '0 20px 60px rgba(123,28,46,0.4)' }}>
-                <p style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: '1.8rem', fontWeight: 700, color: 'white', lineHeight: 1 }}>Grade 6</p>
-                <p className="text-white/40 text-[9px] tracking-[0.3em] uppercase my-2" style={{ fontFamily: "'Inter', sans-serif" }}>through</p>
-                <p style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: '1.8rem', fontWeight: 700, color: '#C8960C', lineHeight: 1 }}>O Level</p>
-                <p className="text-white/40 text-[9px] tracking-[0.3em] uppercase mt-2" style={{ fontFamily: "'Inter', sans-serif" }}>Complete Pathway</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ══════════════════════════════════
-          CAMPUS
-      ══════════════════════════════════ */}
-      <section className="py-28" style={{ background: '#faf8f4' }}>
-        <div className="container mx-auto px-6 max-w-7xl">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
-            <div className="space-y-8">
-              <div className="flex items-center gap-3">
-                <div className="h-px w-8 bg-[#C8960C]" />
-                <span className="text-[#C8960C] tracking-[0.35em] text-[10px] font-sans font-semibold uppercase" style={{ fontFamily: "'Inter', sans-serif" }}>Modern Learning Facilities</span>
-              </div>
-              <h2 style={{ fontFamily: "'Cormorant Garamond', Georgia, serif", fontSize: 'clamp(2.5rem, 5vw, 4.2rem)', fontWeight: 700, color: '#0b1628', lineHeight: 1.05 }}>
-                A Campus Built for<br />
-                <span style={{ color: '#7B1C2E', fontStyle: 'italic' }}>Academic Excellence</span>
-              </h2>
-              <p className="text-lg leading-relaxed font-sans" style={{ color: 'rgba(11,22,40,0.5)', fontFamily: "'Inter', sans-serif", fontWeight: 300 }}>
-                Our campus near Lake City Raiwind Road provides a quiet, distraction-free environment
-                equipped with modern classrooms and resources.
-              </p>
-              <ul className="space-y-4">
-                {[
-                  'Grade 6 to O-Level Specialised Focus',
-                  'Online & Hybrid Learning Options',
-                  'Strategic Location near Raiwind Road',
-                  'Monthly Progress Reports for Parents',
-                ].map((item, i) => (
-                  <li key={i} className="flex items-center gap-4">
-                    <div className="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0"
-                      style={{ background: 'rgba(123,28,46,0.08)', border: '1px solid rgba(123,28,46,0.15)' }}>
-                      <CheckCircle2 size={14} style={{ color: '#7B1C2E' }} />
-                    </div>
-                    <span className="font-sans text-sm" style={{ color: 'rgba(11,22,40,0.7)', fontFamily: "'Inter', sans-serif" }}>{item}</span>
-                  </li>
-                ))}
-              </ul>
-              <Link href="/about"
-                className="group inline-flex items-center gap-3 px-8 py-4 rounded-full font-sans text-sm font-semibold tracking-widest uppercase transition-all duration-300 hover:-translate-y-0.5"
-                style={{ background: '#7B1C2E', color: 'white', fontFamily: "'Inter', sans-serif", letterSpacing: '0.1em', boxShadow: '0 8px 32px rgba(123,28,46,0.3)' }}>
-                About Our Academy
-                <ArrowRight size={16} className="transition-transform duration-300 group-hover:translate-x-1" />
-              </Link>
-            </div>
-
-            {/* Stats grid */}
-            <div className="grid grid-cols-2 gap-5">
+            {/* Mode pills */}
+            <div style={{ display: 'flex', gap: 10, marginBottom: '2.5rem', flexWrap: 'wrap' }}>
               {[
-                { val: '100%', lbl: 'Pass Rate',         sub: 'Every session'       },
-                { val: '10+',  lbl: 'Years Experience',  sub: 'Cambridge focus'     },
-                { val: '15+',  lbl: 'Expert Teachers',   sub: 'Certified educators' },
-                { val: '500+', lbl: 'Students Enrolled', sub: '& counting'          },
-              ].map(({ val, lbl, sub }, i) => (
-                <div key={lbl}
-                  className="p-8 rounded-3xl transition-all duration-300 hover:-translate-y-1"
-                  style={{ background: i % 2 === 0 ? '#0b1628' : '#7B1C2E', border: '1px solid rgba(200,150,12,0.15)', boxShadow: '0 4px 24px rgba(0,0,0,0.1)' }}>
-                  <p style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: '2.8rem', fontWeight: 700, color: 'white', lineHeight: 1 }}>{val}</p>
-                  <p className="text-[10px] uppercase tracking-[0.25em] mt-2 mb-1" style={{ color: 'rgba(255,255,255,0.6)', fontFamily: "'Inter', sans-serif" }}>{lbl}</p>
-                  <p className="text-xs" style={{ color: 'rgba(255,255,255,0.3)', fontFamily: "'Inter', sans-serif" }}>{sub}</p>
+                { icon: Monitor,   label: 'Online Classes' },
+                { icon: Building2, label: 'On Campus'      },
+              ].map(({ icon: Icon, label }) => (
+                <span
+                  key={label}
+                  style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '9px 18px', border: '1px solid rgba(123,28,46,0.2)', background: '#fff', fontSize: '10px', fontWeight: 600, letterSpacing: '0.18em', textTransform: 'uppercase', color: 'rgba(26,26,26,0.6)' }}
+                >
+                  <Icon size={12} style={{ color: '#7B1C2E' }} />
+                  {label}
+                </span>
+              ))}
+            </div>
+
+            <div style={{ display: 'flex', gap: 12 }}>
+              <Link
+                href="/register"
+                className="group"
+                style={{ display: 'inline-flex', alignItems: 'center', gap: 10, padding: '14px 30px', background: '#7B1C2E', color: '#fff', fontFamily: "'Montserrat', sans-serif", fontSize: '10px', fontWeight: 700, letterSpacing: '0.2em', textTransform: 'uppercase', textDecoration: 'none', transition: 'background 0.25s' }}
+              >
+                Apply Now <ArrowRight size={14} />
+              </Link>
+              <Link
+                href="/about"
+                style={{ display: 'inline-flex', alignItems: 'center', gap: 10, padding: '14px 30px', border: '1px solid rgba(26,26,26,0.2)', color: 'rgba(26,26,26,0.6)', fontFamily: "'Montserrat', sans-serif", fontSize: '10px', fontWeight: 600, letterSpacing: '0.2em', textTransform: 'uppercase', textDecoration: 'none', transition: 'all 0.2s' }}
+              >
+                Learn More
+              </Link>
+            </div>
+
+            {/* Mini stats row */}
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 0, marginTop: '4rem', borderTop: '1px solid rgba(123,28,46,0.1)', paddingTop: '2rem' }}>
+              {[
+                { val: '500+', lbl: 'Students'  },
+                { val: 'A*',   lbl: 'Avg Grade'  },
+                { val: '10+',  lbl: 'Years'      },
+              ].map(({ val, lbl }, i) => (
+                <div key={lbl} style={{ paddingRight: i < 2 ? '1.5rem' : 0, borderRight: i < 2 ? '1px solid rgba(123,28,46,0.1)' : 'none', paddingLeft: i > 0 ? '1.5rem' : 0 }}>
+                  <div style={{ fontFamily: "'Georgia', serif", fontSize: '2.4rem', fontWeight: 700, color: '#7B1C2E', lineHeight: 1 }}>{val}</div>
+                  <div style={{ fontFamily: "'Montserrat', sans-serif", fontSize: '8px', fontWeight: 600, letterSpacing: '0.28em', textTransform: 'uppercase', color: 'rgba(26,26,26,0.35)', marginTop: 6 }}>{lbl}</div>
                 </div>
               ))}
             </div>
           </div>
-        </div>
-      </section>
 
-      {/* ══════════════════════════════════
-          SUMMER PROMO
-      ══════════════════════════════════ */}
-      <section className="py-16 px-6" style={{ background: '#fff' }}>
-        <div className="container mx-auto max-w-7xl">
-          <div className="relative rounded-[2.5rem] overflow-hidden"
-            style={{ background: 'linear-gradient(135deg, #0b1628 0%, #1a0a0e 100%)', border: '1px solid rgba(200,150,12,0.2)' }}>
-            {/* Decorative lines */}
-            <div className="absolute top-0 left-0 bottom-0 w-1.5 rounded-l-[2.5rem]"
-              style={{ background: 'linear-gradient(to bottom, #7B1C2E, #C8960C)' }} />
+          {/* RIGHT — image with overlays */}
+          <div style={{ position: 'relative', overflow: 'hidden' }}>
+            <div style={{ position: 'absolute', inset: 0 }}>
+              <Image
+                src={heroImg?.imageUrl ?? ''}
+                alt="AECS Academy students"
+                fill
+                className="object-cover"
+                priority
+              />
+              {/* Light warm overlay */}
+              <div style={{ position: 'absolute', inset: 0, background: 'rgba(250,247,242,0.15)' }} />
+            </div>
 
-            <div className="px-12 md:px-20 py-16 md:py-20">
-              <div className="flex flex-col md:flex-row items-start md:items-center gap-12">
-                <div className="flex-1 space-y-6">
-                  <div className="flex items-center gap-3">
-                    <div className="h-px w-8 bg-[#C8960C]" />
-                    <span className="text-[#C8960C] tracking-[0.35em] text-[10px] font-sans font-semibold uppercase" style={{ fontFamily: "'Inter', sans-serif" }}>Starting June 2025</span>
-                  </div>
-                  <h2 style={{ fontFamily: "'Cormorant Garamond', Georgia, serif", fontSize: 'clamp(2.2rem, 4.5vw, 3.8rem)', fontWeight: 700, color: 'white', lineHeight: 1.05 }}>
-                    Summer Foundation<br />
-                    <span style={{ color: '#C8960C', fontStyle: 'italic' }}>Courses</span>
-                  </h2>
-                  <p className="text-white/50 text-lg leading-relaxed font-sans" style={{ fontFamily: "'Inter', sans-serif", fontWeight: 300 }}>
-                    Bridge the gap in <strong className="text-white/80">Mathematics</strong> and <strong className="text-white/80">English</strong> this summer.
-                    Build a strong foundation before the term begins.
-                  </p>
-                  <div className="flex gap-3 flex-wrap">
-                    {['Mathematics', 'English Language'].map((sub) => (
-                      <span key={sub}
-                        className="flex items-center gap-2 px-5 py-2.5 rounded-full font-sans text-[10px] uppercase tracking-wider font-semibold"
-                        style={{ background: 'rgba(200,150,12,0.12)', border: '1px solid rgba(200,150,12,0.25)', color: '#C8960C', fontFamily: "'Inter', sans-serif" }}>
-                        <BookOpen size={10} />
-                        {sub}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-                <div className="flex-shrink-0 text-center space-y-5">
-                  <div className="w-36 h-36 rounded-full flex flex-col items-center justify-center mx-auto"
-                    style={{ background: '#7B1C2E', border: '2px solid rgba(200,150,12,0.35)', boxShadow: '0 0 0 8px rgba(123,28,46,0.15)' }}>
-                    <span className="text-white/60 text-[9px] tracking-widest uppercase font-sans" style={{ fontFamily: "'Inter', sans-serif" }}>Starts</span>
-                    <span style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: '2rem', fontWeight: 700, color: 'white', lineHeight: 1.1 }}>June</span>
-                    <span style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: '1.2rem', fontWeight: 700, color: '#C8960C', lineHeight: 1.1 }}>2025</span>
-                  </div>
-                  <Link href="/register"
-                    className="group inline-flex items-center justify-center gap-2 px-8 py-4 rounded-full font-sans text-sm font-semibold tracking-widest uppercase transition-all duration-300 hover:opacity-90"
-                    style={{ background: '#C8960C', color: '#0b1628', fontFamily: "'Inter', sans-serif", letterSpacing: '0.1em' }}>
-                    Reserve Seat <ArrowRight size={14} className="transition-transform duration-300 group-hover:translate-x-1" />
-                  </Link>
-                </div>
+            {/* Corner badge — top left */}
+            <div style={{ position: 'absolute', top: '2.5rem', left: '2.5rem', background: '#7B1C2E', padding: '1.25rem 1.5rem', zIndex: 10 }}>
+              <div style={{ fontFamily: "'Georgia', serif", fontSize: '1.8rem', fontWeight: 700, color: '#fff', lineHeight: 1 }}>10+</div>
+              <div style={{ fontFamily: "'Montserrat', sans-serif", fontSize: '8px', fontWeight: 600, letterSpacing: '0.25em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.5)', marginTop: 5 }}>Yrs</div>
+            </div>
+
+            {/* Bottom strip */}
+            <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, background: 'rgba(250,247,242,0.96)', borderTop: '1px solid rgba(123,28,46,0.08)', padding: '1.25rem 2rem', display: 'flex', alignItems: 'center', gap: 14, zIndex: 10 }}>
+              <Trophy size={18} style={{ color: '#7B1C2E', flexShrink: 0 }} />
+              <div>
+                <div style={{ fontFamily: "'Georgia', serif", fontSize: '1rem', fontWeight: 700, color: '#1a1a1a', lineHeight: 1 }}>A* Average Grade</div>
+                <div style={{ fontFamily: "'Montserrat', sans-serif", fontSize: '9px', color: 'rgba(26,26,26,0.4)', letterSpacing: '0.2em', textTransform: 'uppercase', marginTop: 4 }}>Every Academic Session</div>
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* ══════════════════════════════════
-          CTA BAND
-      ══════════════════════════════════ */}
-      <section className="py-20" style={{ background: '#7B1C2E' }}>
+
+      {/* ══════════════════════════════════════
+          2. TICKER STRIP
+      ══════════════════════════════════════ */}
+      <div style={{ background: '#7B1C2E', padding: '11px 0', overflow: 'hidden', borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
+        <div
+          style={{ display: 'flex', gap: 0, whiteSpace: 'nowrap', animation: 'ticker 28s linear infinite' }}
+        >
+          {['IGCSE Specialists', 'O-Level Experts', 'Grade 6–11', 'Online & On-Campus', 'Lake City Lahore', '100% Success Rate', 'Cambridge Certified', 'Small Batch Sizes'].flatMap((t, i, a) => [
+            <span key={`t${i}`} style={{ fontFamily: "'Montserrat', sans-serif", fontSize: '9px', fontWeight: 600, letterSpacing: '0.25em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.75)', padding: '0 28px', display: 'inline-block' }}>{t}</span>,
+            <span key={`s${i}`} style={{ color: 'rgba(255,255,255,0.3)', display: 'inline-block' }}>✦</span>,
+          ])}
+          {['IGCSE Specialists', 'O-Level Experts', 'Grade 6–11', 'Online & On-Campus', 'Lake City Lahore', '100% Success Rate', 'Cambridge Certified', 'Small Batch Sizes'].flatMap((t, i) => [
+            <span key={`t2${i}`} style={{ fontFamily: "'Montserrat', sans-serif", fontSize: '9px', fontWeight: 600, letterSpacing: '0.25em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.75)', padding: '0 28px', display: 'inline-block' }}>{t}</span>,
+            <span key={`s2${i}`} style={{ color: 'rgba(255,255,255,0.3)', display: 'inline-block' }}>✦</span>,
+          ])}
+        </div>
+        <style>{`@keyframes ticker { from { transform: translateX(0); } to { transform: translateX(-50%); } }`}</style>
+      </div>
+
+
+      {/* ══════════════════════════════════════
+          3. STATS — horizontal rule style
+      ══════════════════════════════════════ */}
+      <section style={{ background: '#fff', borderBottom: '1px solid rgba(123,28,46,0.07)' }}>
+        <div className="container mx-auto max-w-7xl">
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)' }}>
+            {stats.map((s, i) => (
+              <div
+                key={i}
+                style={{
+                  padding: '3rem 2rem',
+                  borderRight: i < 3 ? '1px solid rgba(123,28,46,0.07)' : 'none',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  textAlign: 'center',
+                  gap: '1rem',
+                }}
+              >
+                <s.icon size={20} style={{ color: '#7B1C2E' }} />
+                <div style={{ fontFamily: "'Georgia', serif", fontSize: '2.8rem', fontWeight: 700, color: '#1a1a1a', lineHeight: 1 }}>{s.value}</div>
+                <div style={{ fontFamily: "'Montserrat', sans-serif", fontSize: '9px', fontWeight: 600, letterSpacing: '0.26em', textTransform: 'uppercase', color: 'rgba(26,26,26,0.35)' }}>{s.label}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+
+      {/* ══════════════════════════════════════
+          4. WHY AECS — editorial numbered list
+      ══════════════════════════════════════ */}
+      <section style={{ background: '#FAF7F2', padding: '6rem 0', borderBottom: '1px solid rgba(123,28,46,0.07)' }}>
         <div className="container mx-auto px-6 max-w-7xl">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-8">
+
+          {/* Header */}
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '4rem', marginBottom: '4rem', alignItems: 'end' }}>
             <div>
-              <p className="text-white/40 text-[10px] tracking-[0.35em] uppercase font-sans mb-2" style={{ fontFamily: "'Inter', sans-serif" }}>Admissions Open — 2025</p>
-              <h2 style={{ fontFamily: "'Cormorant Garamond', Georgia, serif", fontSize: 'clamp(1.8rem, 3.5vw, 2.8rem)', fontWeight: 700, color: 'white' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: '1.25rem' }}>
+                <div style={{ width: 24, height: 2, background: '#7B1C2E' }} />
+                <span style={{ fontFamily: "'Montserrat', sans-serif", fontSize: '9px', fontWeight: 700, letterSpacing: '0.32em', textTransform: 'uppercase', color: '#7B1C2E' }}>
+                  Foundation for Brilliance
+                </span>
+              </div>
+              <h2 style={{ fontFamily: "'Georgia', serif", fontSize: 'clamp(2.2rem, 4vw, 3.4rem)', fontWeight: 700, color: '#1a1a1a', lineHeight: 1.05 }}>
+                Why Choose<br /><span style={{ color: '#7B1C2E' }}>AECS Academy?</span>
+              </h2>
+            </div>
+            <p style={{ fontFamily: "'Montserrat', sans-serif", fontSize: '13px', fontWeight: 300, lineHeight: 1.9, color: 'rgba(26,26,26,0.5)', paddingTop: '1rem' }}>
+              A structured, supportive environment designed specifically for the rigorous Cambridge curriculum — where every student's potential is fully realised.
+            </p>
+          </div>
+
+          {/* 4 pillars — large number + card */}
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '1px', background: 'rgba(123,28,46,0.08)' }}>
+            {pillars.map((p) => (
+              <div
+                key={p.num}
+                style={{ background: '#fff', padding: '2.5rem 2rem', position: 'relative', transition: 'all 0.3s', cursor: 'default' }}
+                onMouseEnter={e => { (e.currentTarget as HTMLElement).style.background = '#7B1C2E'; (e.currentTarget as HTMLElement).querySelectorAll('[data-flip]').forEach(el => { (el as HTMLElement).style.color = '#fff'; }); (e.currentTarget as HTMLElement).querySelector('[data-icon]')!.querySelector('*')!.setAttribute('stroke', '#fff'); }}
+                onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = '#fff'; (e.currentTarget as HTMLElement).querySelectorAll('[data-flip]').forEach((el, i) => { (el as HTMLElement).style.color = i === 0 ? 'rgba(26,26,26,0.05)' : i === 1 ? '#7B1C2E' : i === 2 ? '#1a1a1a' : 'rgba(26,26,26,0.5)'; }); }}
+              >
+                <p data-flip="num" style={{ fontFamily: "'Georgia', serif", fontSize: '4rem', fontWeight: 700, color: 'rgba(26,26,26,0.05)', lineHeight: 1, marginBottom: '1.5rem', transition: 'color 0.3s' }}>{p.num}</p>
+                <div data-icon style={{ marginBottom: '1rem' }}>
+                  <p.icon size={22} color="#7B1C2E" style={{ transition: 'stroke 0.3s' }} />
+                </div>
+                <p data-flip="title" style={{ fontFamily: "'Georgia', serif", fontSize: '1.2rem', fontWeight: 700, color: '#1a1a1a', marginBottom: '0.75rem', transition: 'color 0.3s' }}>{p.title}</p>
+                <p data-flip="desc" style={{ fontFamily: "'Montserrat', sans-serif", fontSize: '12px', fontWeight: 300, lineHeight: 1.75, color: 'rgba(26,26,26,0.5)', transition: 'color 0.3s' }}>{p.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+
+      {/* ══════════════════════════════════════
+          5. SUBJECTS — light, grid of tags
+      ══════════════════════════════════════ */}
+      <section style={{ background: '#fff', padding: '6rem 0', borderBottom: '1px solid rgba(123,28,46,0.07)' }}>
+        <div className="container mx-auto px-6 max-w-7xl">
+          <div style={{ display: 'grid', gridTemplateColumns: '5fr 7fr', gap: '5rem', alignItems: 'center' }}>
+
+            <div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: '1.25rem' }}>
+                <div style={{ width: 24, height: 2, background: '#7B1C2E' }} />
+                <span style={{ fontFamily: "'Montserrat', sans-serif", fontSize: '9px', fontWeight: 700, letterSpacing: '0.32em', textTransform: 'uppercase', color: '#7B1C2E' }}>Full Cambridge Curriculum</span>
+              </div>
+              <h2 style={{ fontFamily: "'Georgia', serif", fontSize: 'clamp(2rem, 3.5vw, 3rem)', fontWeight: 700, color: '#1a1a1a', lineHeight: 1.06, marginBottom: '1.5rem' }}>
+                Specialised<br /><span style={{ color: '#7B1C2E' }}>Subjects</span> We Offer
+              </h2>
+              <p style={{ fontFamily: "'Montserrat', sans-serif", fontSize: '13px', fontWeight: 300, lineHeight: 1.9, color: 'rgba(26,26,26,0.5)', marginBottom: '2rem' }}>
+                From core sciences to business studies — the complete Cambridge IGCSE &amp; O-Level curriculum, taught by subject experts.
+              </p>
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginBottom: '2rem' }}>
+                {subjects.map((sub) => (
+                  <span
+                    key={sub}
+                    style={{ display: 'inline-flex', alignItems: 'center', gap: 7, padding: '8px 14px', border: '1px solid rgba(123,28,46,0.18)', background: '#FAF7F2', fontFamily: "'Montserrat', sans-serif", fontSize: '10px', fontWeight: 600, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'rgba(26,26,26,0.65)', transition: 'all 0.2s', cursor: 'default' }}
+                    onMouseEnter={e => { (e.currentTarget as HTMLElement).style.background = '#7B1C2E'; (e.currentTarget as HTMLElement).style.color = '#fff'; (e.currentTarget as HTMLElement).style.borderColor = '#7B1C2E'; }}
+                    onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = '#FAF7F2'; (e.currentTarget as HTMLElement).style.color = 'rgba(26,26,26,0.65)'; (e.currentTarget as HTMLElement).style.borderColor = 'rgba(123,28,46,0.18)'; }}
+                  >
+                    <CheckCircle2 size={11} style={{ color: '#7B1C2E', flexShrink: 0 }} />
+                    {sub}
+                  </span>
+                ))}
+              </div>
+              <Link
+                href="/register"
+                style={{ display: 'inline-flex', alignItems: 'center', gap: 10, padding: '13px 28px', background: '#7B1C2E', color: '#fff', fontFamily: "'Montserrat', sans-serif", fontSize: '10px', fontWeight: 700, letterSpacing: '0.18em', textTransform: 'uppercase', textDecoration: 'none' }}
+              >
+                Explore &amp; Enroll <ArrowRight size={13} />
+              </Link>
+            </div>
+
+            {/* Classroom image */}
+            <div style={{ position: 'relative' }}>
+              <div style={{ aspectRatio: '4/3', overflow: 'hidden', border: '1px solid rgba(123,28,46,0.09)' }}>
+                <Image src={classroomImg?.imageUrl ?? ''} alt="AECS Classroom" fill className="object-cover" />
+              </div>
+              {/* Grade badge */}
+              <div style={{ position: 'absolute', bottom: '-24px', right: '-18px', background: '#7B1C2E', border: '1px solid rgba(200,150,12,0.3)', padding: '1.5rem 2rem', textAlign: 'center' }}>
+                <div style={{ fontFamily: "'Georgia', serif", fontSize: '1.5rem', fontWeight: 700, color: '#fff', lineHeight: 1 }}>Grade 6</div>
+                <div style={{ fontFamily: "'Montserrat', sans-serif", fontSize: '8px', fontWeight: 600, letterSpacing: '0.22em', color: 'rgba(255,255,255,0.4)', textTransform: 'uppercase', margin: '6px 0' }}>through</div>
+                <div style={{ fontFamily: "'Georgia', serif", fontSize: '1.5rem', fontWeight: 700, color: '#C8960C', lineHeight: 1 }}>O Level</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+
+      {/* ══════════════════════════════════════
+          6. CAMPUS — light feature section
+      ══════════════════════════════════════ */}
+      <section style={{ background: '#FAF7F2', padding: '6rem 0', borderBottom: '1px solid rgba(123,28,46,0.07)' }}>
+        <div className="container mx-auto px-6 max-w-7xl">
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '5rem', alignItems: 'center' }}>
+
+            {/* Stats grid */}
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1px', background: 'rgba(123,28,46,0.08)' }}>
+              {[
+                { val: '100%', lbl: 'Pass Rate',         sub: 'Every session',       dark: true  },
+                { val: '10+',  lbl: 'Years Experience',  sub: 'Cambridge focus',      dark: false },
+                { val: '15+',  lbl: 'Expert Teachers',   sub: 'Certified educators',  dark: false },
+                { val: '500+', lbl: 'Students Enrolled', sub: '& counting',           dark: true  },
+              ].map(({ val, lbl, sub, dark }) => (
+                <div key={lbl} style={{ background: dark ? '#7B1C2E' : '#fff', padding: '2.5rem 2rem' }}>
+                  <div style={{ fontFamily: "'Georgia', serif", fontSize: '2.6rem', fontWeight: 700, color: dark ? '#fff' : '#1a1a1a', lineHeight: 1 }}>{val}</div>
+                  <div style={{ fontFamily: "'Montserrat', sans-serif", fontSize: '9px', fontWeight: 600, letterSpacing: '0.24em', textTransform: 'uppercase', color: dark ? 'rgba(255,255,255,0.6)' : 'rgba(26,26,26,0.5)', marginTop: 10, marginBottom: 4 }}>{lbl}</div>
+                  <div style={{ fontFamily: "'Montserrat', sans-serif", fontSize: '11px', color: dark ? 'rgba(255,255,255,0.35)' : 'rgba(26,26,26,0.35)', fontWeight: 300 }}>{sub}</div>
+                </div>
+              ))}
+            </div>
+
+            <div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: '1.25rem' }}>
+                <div style={{ width: 24, height: 2, background: '#7B1C2E' }} />
+                <span style={{ fontFamily: "'Montserrat', sans-serif", fontSize: '9px', fontWeight: 700, letterSpacing: '0.32em', textTransform: 'uppercase', color: '#7B1C2E' }}>Modern Learning Facilities</span>
+              </div>
+              <h2 style={{ fontFamily: "'Georgia', serif", fontSize: 'clamp(2rem, 3.5vw, 3rem)', fontWeight: 700, color: '#1a1a1a', lineHeight: 1.06, marginBottom: '1.5rem' }}>
+                A Campus Built for<br /><span style={{ color: '#7B1C2E' }}>Academic Excellence</span>
+              </h2>
+              <p style={{ fontFamily: "'Montserrat', sans-serif", fontSize: '13px', fontWeight: 300, lineHeight: 1.9, color: 'rgba(26,26,26,0.5)', marginBottom: '2rem' }}>
+                Our campus near Lake City Raiwind Road provides a quiet, distraction-free environment equipped with modern classrooms and resources.
+              </p>
+              <ul style={{ listStyle: 'none', padding: 0, margin: '0 0 2.5rem', display: 'flex', flexDirection: 'column', gap: 12 }}>
+                {[
+                  'Grade 6 to O-Level Specialised Focus',
+                  'Online &amp; Hybrid Learning Options',
+                  'Strategic Location near Raiwind Road',
+                  'Monthly Progress Reports for Parents',
+                ].map((item, i) => (
+                  <li key={i} style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                    <div style={{ width: 6, height: 6, background: '#7B1C2E', flexShrink: 0 }} />
+                    <span
+                      style={{ fontFamily: "'Montserrat', sans-serif", fontSize: '13px', color: 'rgba(26,26,26,0.65)' }}
+                      dangerouslySetInnerHTML={{ __html: item }}
+                    />
+                  </li>
+                ))}
+              </ul>
+              <Link
+                href="/about"
+                style={{ display: 'inline-flex', alignItems: 'center', gap: 10, padding: '13px 28px', background: '#7B1C2E', color: '#fff', fontFamily: "'Montserrat', sans-serif", fontSize: '10px', fontWeight: 700, letterSpacing: '0.18em', textTransform: 'uppercase', textDecoration: 'none' }}
+              >
+                About Our Academy <ArrowRight size={13} />
+              </Link>
+            </div>
+          </div>
+        </div>
+      </section>
+
+
+      {/* ══════════════════════════════════════
+          7. SUMMER PROMO — white, bordered box
+      ══════════════════════════════════════ */}
+      <section style={{ background: '#fff', padding: '5rem 0', borderBottom: '1px solid rgba(123,28,46,0.07)' }}>
+        <div className="container mx-auto px-6 max-w-7xl">
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr auto', gap: '4rem', alignItems: 'center', border: '1px solid rgba(123,28,46,0.15)', padding: '3.5rem 3.5rem', position: 'relative', overflow: 'hidden' }}>
+            {/* Left accent bar */}
+            <div style={{ position: 'absolute', left: 0, top: 0, bottom: 0, width: 4, background: '#7B1C2E' }} />
+
+            <div style={{ paddingLeft: '1rem' }}>
+              <div style={{ fontFamily: "'Montserrat', sans-serif", fontSize: '9px', fontWeight: 700, letterSpacing: '0.32em', textTransform: 'uppercase', color: '#7B1C2E', marginBottom: '1rem' }}>
+                Starting June 2025
+              </div>
+              <h2 style={{ fontFamily: "'Georgia', serif", fontSize: 'clamp(1.8rem, 3.5vw, 2.8rem)', fontWeight: 700, color: '#1a1a1a', lineHeight: 1.06, marginBottom: '1rem' }}>
+                Summer Foundation <span style={{ color: '#7B1C2E' }}>Courses</span>
+              </h2>
+              <p style={{ fontFamily: "'Montserrat', sans-serif", fontSize: '13px', fontWeight: 300, lineHeight: 1.9, color: 'rgba(26,26,26,0.5)', marginBottom: '1.5rem', maxWidth: 480 }}>
+                Bridge the gap in <strong style={{ fontWeight: 600, color: '#1a1a1a' }}>Mathematics</strong> and <strong style={{ fontWeight: 600, color: '#1a1a1a' }}>English Language</strong> this summer. Build a strong foundation before the term begins.
+              </p>
+              <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap', marginBottom: '2rem' }}>
+                {['Mathematics', 'English Language'].map((s) => (
+                  <span key={s} style={{ display: 'inline-flex', alignItems: 'center', gap: 7, padding: '8px 14px', border: '1px solid rgba(123,28,46,0.2)', background: '#FAF7F2', fontFamily: "'Montserrat', sans-serif", fontSize: '10px', fontWeight: 600, letterSpacing: '0.14em', textTransform: 'uppercase', color: '#7B1C2E' }}>
+                    <BookOpen size={11} />
+                    {s}
+                  </span>
+                ))}
+              </div>
+              <Link
+                href="/register"
+                style={{ display: 'inline-flex', alignItems: 'center', gap: 10, padding: '13px 28px', background: '#7B1C2E', color: '#fff', fontFamily: "'Montserrat', sans-serif", fontSize: '10px', fontWeight: 700, letterSpacing: '0.18em', textTransform: 'uppercase', textDecoration: 'none' }}
+              >
+                Reserve Your Seat <ArrowRight size={13} />
+              </Link>
+            </div>
+
+            {/* Circle */}
+            <div style={{ width: 150, height: 150, border: '1px solid rgba(123,28,46,0.2)', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', textAlign: 'center', flexShrink: 0 }}>
+              <div style={{ fontFamily: "'Montserrat', sans-serif", fontSize: '8px', fontWeight: 600, letterSpacing: '0.22em', textTransform: 'uppercase', color: 'rgba(26,26,26,0.35)' }}>Starts</div>
+              <div style={{ fontFamily: "'Georgia', serif", fontSize: '2.2rem', fontWeight: 700, color: '#7B1C2E', lineHeight: 1.1 }}>June</div>
+              <div style={{ fontFamily: "'Georgia', serif", fontSize: '1.2rem', fontWeight: 700, color: 'rgba(26,26,26,0.3)', lineHeight: 1 }}>2025</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+
+      {/* ══════════════════════════════════════
+          8. CTA BAND — maroon full width
+      ══════════════════════════════════════ */}
+      <section style={{ background: '#7B1C2E', padding: '5rem 0' }}>
+        <div className="container mx-auto px-6 max-w-7xl">
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '2rem', flexWrap: 'wrap' }}>
+            <div>
+              <div style={{ fontFamily: "'Montserrat', sans-serif", fontSize: '9px', fontWeight: 600, letterSpacing: '0.32em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.35)', marginBottom: '0.75rem' }}>
+                Admissions Open — 2025
+              </div>
+              <h2 style={{ fontFamily: "'Georgia', serif", fontSize: 'clamp(1.8rem, 3vw, 2.6rem)', fontWeight: 700, color: '#fff' }}>
                 Ready to Start Your Journey?
               </h2>
             </div>
-            <div className="flex gap-4">
-              <Link href="/register"
-                className="group inline-flex items-center gap-2.5 px-8 py-4 rounded-full font-sans text-sm font-semibold tracking-widest uppercase transition-all duration-300 hover:opacity-90"
-                style={{ background: '#C8960C', color: '#0b1628', fontFamily: "'Inter', sans-serif", letterSpacing: '0.1em' }}>
-                Enroll Now <ArrowRight size={14} className="transition-transform duration-300 group-hover:translate-x-1" />
+            <div style={{ display: 'flex', gap: 12 }}>
+              <Link
+                href="/register"
+                style={{ display: 'inline-flex', alignItems: 'center', gap: 10, padding: '14px 28px', background: '#fff', color: '#7B1C2E', fontFamily: "'Montserrat', sans-serif", fontSize: '10px', fontWeight: 700, letterSpacing: '0.18em', textTransform: 'uppercase', textDecoration: 'none', transition: 'opacity 0.2s' }}
+              >
+                Enroll Now <ArrowRight size={13} />
               </Link>
-              <a href="tel:03144033054"
-                className="inline-flex items-center gap-2 px-8 py-4 rounded-full font-sans text-sm font-semibold tracking-widest uppercase transition-all duration-300 hover:bg-white/10"
-                style={{ border: '1px solid rgba(255,255,255,0.3)', color: 'white', fontFamily: "'Inter', sans-serif", letterSpacing: '0.1em' }}>
-                Call Us
+              <a
+                href="tel:03144033054"
+                style={{ display: 'inline-flex', alignItems: 'center', gap: 10, padding: '14px 28px', border: '1px solid rgba(255,255,255,0.3)', color: '#fff', fontFamily: "'Montserrat', sans-serif", fontSize: '10px', fontWeight: 600, letterSpacing: '0.18em', textTransform: 'uppercase', textDecoration: 'none' }}
+              >
+                <Phone size={13} /> Call Us
               </a>
             </div>
           </div>
