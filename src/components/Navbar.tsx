@@ -41,7 +41,7 @@ function MagneticCTA({ href, className = "" }: { href: string; className?: strin
       }}
       onMouseLeave={() => { mx.set(0); my.set(0); }}
       whileTap={{ scale: 0.96 }}
-      className={`group inline-flex items-center gap-3 px-5 sm:px-7 py-2.5 sm:py-3.5 bg-[#7B1C2E] text-white font-accent text-[9px] sm:text-[10px] font-bold tracking-[0.15em] uppercase rounded-full shadow-lg hover:shadow-[#7B1C2E]/40 transition-all duration-300 relative overflow-hidden ${className}`}
+      className={`group inline-flex items-center gap-2 sm:gap-3 px-3.5 sm:px-7 py-2 sm:py-3.5 bg-[#7B1C2E] text-white font-accent text-[8px] sm:text-[10px] font-bold tracking-[0.15em] uppercase rounded-full shadow-lg hover:shadow-[#7B1C2E]/40 transition-all duration-300 relative overflow-hidden ${className}`}
     >
       <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/10 to-white/0 -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
       <span className="relative z-10">Enroll Now</span>
@@ -52,7 +52,7 @@ function MagneticCTA({ href, className = "" }: { href: string; className?: strin
         transition={{ type: "spring", stiffness: 400 }}
         className="relative z-10"
       >
-        <ArrowRight size={14} strokeWidth={2.5} />
+        <ArrowRight size={12} className="sm:size-[14px]" strokeWidth={2.5} />
       </motion.span>
     </motion.a>
   );
@@ -88,11 +88,12 @@ export default function Navbar() {
         }}
       >
         <div className="max-w-[1200px] mx-auto pointer-events-auto">
-          <div className="glass rounded-full px-4 sm:px-8 py-2.5 shadow-[0_8px_32px_rgba(0,0,0,0.08)] border border-white/40 backdrop-blur-xl">
+          <div className="glass rounded-full px-3 sm:px-8 py-2.5 shadow-[0_8px_32px_rgba(0,0,0,0.08)] border border-white/40 backdrop-blur-xl">
             <div className="flex items-center justify-between">
               <motion.div 
                 whileHover={{ scale: 1.05 }} 
                 transition={{ type: "spring", stiffness: 400, damping: 10 }}
+                className="flex-shrink-0"
               >
                 <Link href="/" aria-label="AECS home">
                   <AECSLogo size="sm" />
@@ -126,10 +127,10 @@ export default function Navbar() {
                 })}
               </nav>
 
-              <div className="flex items-center gap-3 sm:gap-4">
+              <div className="flex items-center gap-2 sm:gap-4">
                 <MagneticCTA href="/register" />
                 <button 
-                  className="lg:hidden p-2.5 sm:p-3 bg-[#7B1C2E]/5 rounded-full text-[#7B1C2E] hover:bg-[#7B1C2E] hover:text-white transition-all duration-300" 
+                  className="lg:hidden p-2 sm:p-3 bg-[#7B1C2E]/5 rounded-full text-[#7B1C2E] hover:bg-[#7B1C2E] hover:text-white transition-all duration-300" 
                   onClick={() => setOpen(true)}
                   aria-label="Open menu"
                 >
