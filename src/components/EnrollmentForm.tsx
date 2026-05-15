@@ -1,6 +1,7 @@
+
 "use client";
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
@@ -22,15 +23,7 @@ import {
 } from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
-
-/* ─────────────────────────────────────
-   EmailJS config — fill these in
-───────────────────────────────────── */
-const EMAILJS_SERVICE_ID  = 'YOUR_SERVICE_ID';   // e.g. 'service_abc123'
-const EMAILJS_STUDENT_TPL = 'YOUR_STUDENT_TEMPLATE_ID'; // confirmation email to student
-const EMAILJS_OWNER_TPL   = 'YOUR_OWNER_TEMPLATE_ID';   // notification email to owner
-const EMAILJS_PUBLIC_KEY  = 'YOUR_PUBLIC_KEY';   // e.g. 'abc123XYZ'
-const OWNER_EMAIL         = 'Hassani854@gmail.com';
+import { submitEnrollmentAction } from '@/app/actions/enrollment';
 
 /* ─────────────────────────────────────
    Subject lists per grade
@@ -88,19 +81,6 @@ export default function EnrollmentForm() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess,   setIsSuccess]   = useState(false);
   const [sameAddr,    setSameAddr]    = useState(false);
-  const emailJSLoaded = useRef(false);
-
-  /* Load EmailJS from CDN once */
-  useEffect(() => {
-    if (emailJSLoaded.current) return;
-    const script = document.createElement('script');
-    script.src = 'https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js';
-    script.onload = () => {
-      (window as any).emailjs?.init(EMAILJS_PUBLIC_KEY);
-      emailJSLoaded.current = true;
-    };
-    document.head.appendChild(script);
-  }, []);
 
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
@@ -125,49 +105,23 @@ export default function EnrollmentForm() {
   const onSubmit = async (values: FormValues) => {
     setIsSubmitting(true);
 
-    const subjectsList = values.subjects.join(', ');
-    const commonParams = {
-      from_name:          values.fullName,
-      student_name:       values.fullName,
-      student_age:        String(values.age),
-      student_email:      values.email,
-      student_phone:      values.phone,
-      primary_address:    values.primaryAddress,
-      secondary_address:  values.secondaryAddress || 'Same as primary',
-      class_level:        values.classLevel,
-      subjects:           subjectsList,
-      session_preference: values.sessionPreference,
-    };
-
     try {
-      const emailjs = (window as any).emailjs;
+      const result = await submitEnrollmentAction(values);
 
-      if (!emailjs) throw new Error('EmailJS not loaded');
-
-      /* 1️⃣ Confirmation email → student */
-      await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_STUDENT_TPL, {
-        ...commonParams,
-        to_email: values.email,
-        reply_to: OWNER_EMAIL,
-      });
-
-      /* 2️⃣ Notification email → academy owner */
-      await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_OWNER_TPL, {
-        ...commonParams,
-        to_email: OWNER_EMAIL,
-        reply_to: values.email,
-      });
-
-      setIsSuccess(true);
-      toast({
-        title:       'Registration Successful!',
-        description: 'Confirmation email sent. Our team will contact you within 24 hours.',
-      });
-    } catch (err) {
-      console.error('EmailJS error:', err);
+      if (result.success) {
+        setIsSuccess(true);
+        toast({
+          title:       'Registration Successful!',
+          description: 'A confirmation email has been sent to your address.',
+        });
+      } else {
+        throw new Error(result.error || 'Failed to submit enrollment');
+      }
+    } catch (err: any) {
+      console.error('Submission error:', err);
       toast({
         title:       'Submission Error',
-        description: 'Could not send emails. Please call us at 0314 4033054.',
+        description: err.message || 'Something went wrong. Please call us at 0314 4033054.',
         variant:     'destructive',
       });
     } finally {
@@ -541,7 +495,7 @@ export default function EnrollmentForm() {
 
                 {/* Consent */}
                 <FormField control={form.control} name="consent" render={({ field }) => (
-                  <FormItem className="flex items-start gap-3 border border-muted/80 rounded-2xl p-5 hover:border-primary/30 transition-colors animate-border-pulse">
+                  <FormItem className="flex items-start gap-3 border border-muted/80 rounded-2xl p-5 hover:border-primary/30 transition-colors">
                     <FormControl>
                       <Checkbox
                         checked={field.value}
@@ -568,13 +522,11 @@ export default function EnrollmentForm() {
                   </FormItem>
                 )} />
 
-                {/* Email note */}
+                {/* Info note */}
                 <div className="flex items-start gap-2 text-xs text-muted-foreground bg-muted/30 rounded-xl p-4">
                   <Mail size={14} className="text-primary mt-0.5 shrink-0" />
                   <p>
-                    Upon submission, a confirmation email will be sent to <strong>{watch('email')}</strong>,
-                    and our admissions team will receive your application at{' '}
-                    <strong>{OWNER_EMAIL}</strong>.
+                    Upon submission, we will send confirmation to your email and notify our admissions team to review your application.
                   </p>
                 </div>
               </CardContent>
@@ -600,7 +552,7 @@ export default function EnrollmentForm() {
               <Button
                 type="button"
                 onClick={nextStep}
-                className="bg-primary hover:bg-primary/90 text-white rounded-full px-10 h-12 font-accent text-xs uppercase tracking-widest shadow-md btn-shine"
+                className="bg-primary hover:bg-primary/90 text-white rounded-full px-10 h-12 font-accent text-xs uppercase tracking-widest shadow-md"
               >
                 Next Step <ChevronRight size={16} className="ml-1" />
               </Button>
@@ -608,12 +560,12 @@ export default function EnrollmentForm() {
               <Button
                 type="submit"
                 disabled={isSubmitting}
-                className="bg-accent hover:bg-accent/90 text-secondary rounded-full px-12 h-14 font-accent font-bold text-sm uppercase tracking-widest shadow-glow-accent btn-shine"
+                className="bg-accent hover:bg-accent/90 text-secondary rounded-full px-12 h-14 font-accent font-bold text-sm uppercase tracking-widest shadow-lg"
               >
                 {isSubmitting ? (
                   <>
                     <Loader2 size={18} className="mr-2 animate-spin" />
-                    Sending…
+                    Submitting…
                   </>
                 ) : (
                   'Finalise Enrollment'
