@@ -1,8 +1,8 @@
 "use client";
-import React from 'react';
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Briefcase, GraduationCap, Globe, Users, ArrowRight, Mail } from 'lucide-react';
-import Link from 'next/link';
+import { Briefcase, GraduationCap, Globe, Users, ArrowRight, Mail, ChevronDown } from 'lucide-react';
+import CareerApplicationForm from '@/components/CareerApplicationForm';
 
 const OPENINGS = [
   { 
@@ -26,12 +26,14 @@ const OPENINGS = [
 ];
 
 export default function CareersPage() {
+  const [showForm, setShowForm] = useState(false);
+
   return (
     <div className="pb-24" style={{ fontFamily: "'Cormorant Garamond', Georgia, serif" }}>
       
       {/* ── HEADER ── */}
       <section
-        className="relative overflow-hidden pt-40 pb-32"
+        className="relative overflow-hidden pt-44 pb-32"
         style={{ background: 'linear-gradient(135deg, #0b1628 0%, #1a0a0e 60%, #0b1628 100%)' }}
       >
         <div className="absolute inset-0 opacity-[0.03] pointer-events-none"
@@ -52,7 +54,7 @@ export default function CareersPage() {
               Shape the <span style={{ color: '#C8960C', fontStyle: 'italic' }}>Future</span>
             </h1>
             <p className="text-xl leading-relaxed mx-auto" style={{ color: 'rgba(255,255,255,0.45)', maxWidth: '600px', fontFamily: "'Inter', sans-serif", fontWeight: 300 }}>
-              At AECS Academy, we don't just hire teachers; we empower mentors who are passionate about academic excellence.
+              At AECS Academy, we empower mentors who are passionate about academic excellence.
             </p>
           </motion.div>
         </div>
@@ -109,15 +111,47 @@ export default function CareersPage() {
                   <h4 className="text-2xl font-bold text-[#0b1628]">{job.title}</h4>
                   <p className="font-body text-xs text-black/50 max-w-md">{job.desc}</p>
                 </div>
-                <Link 
-                  href="/contact" 
+                <button 
+                  onClick={() => {
+                    setShowForm(true);
+                    document.getElementById('apply-form')?.scrollIntoView({ behavior: 'smooth' });
+                  }}
                   className="px-8 py-3 bg-[#0b1628] text-white text-[10px] font-bold tracking-widest uppercase rounded-full hover:bg-[#7B1C2E] transition-all flex items-center gap-2"
                 >
                   Apply Now <ArrowRight size={12} />
-                </Link>
+                </button>
               </motion.div>
             ))}
           </div>
+        </div>
+      </section>
+
+      {/* ── APPLICATION FORM ── */}
+      <section id="apply-form" className="py-24 bg-white">
+        <div className="container mx-auto px-6 max-w-4xl">
+          {!showForm ? (
+            <div className="text-center p-16 rounded-[3rem] bg-[#0b1628] text-white relative overflow-hidden">
+              <div className="absolute top-0 right-0 w-64 h-64 bg-[#C8960C]/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
+              <h2 className="text-4xl font-bold mb-6">Ready to Join Us?</h2>
+              <p className="text-white/50 mb-10 max-w-xl mx-auto text-lg font-body">
+                Whether you're applying for an open position or want to be considered for future roles, complete our official career application form.
+              </p>
+              <button 
+                onClick={() => setShowForm(true)}
+                className="px-12 py-5 bg-[#C8960C] text-[#0b1628] font-bold tracking-[0.2em] uppercase rounded-full hover:scale-105 transition-all flex items-center gap-3 mx-auto"
+              >
+                Open Official Form <ChevronDown size={18} />
+              </button>
+            </div>
+          ) : (
+            <div className="animate-fade-up">
+              <div className="text-center mb-12">
+                <span className="text-[10px] uppercase tracking-[0.4em] font-bold text-[#7B1C2E]">Official Career Form</span>
+                <h2 className="text-3xl font-bold text-[#0b1628] mt-2">Faculty Recruitment Portal</h2>
+              </div>
+              <CareerApplicationForm />
+            </div>
+          )}
         </div>
       </section>
 
@@ -129,16 +163,16 @@ export default function CareersPage() {
         >
           <div className="absolute top-0 right-0 w-64 h-64 bg-[#C8960C]/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
           
-          <h2 className="text-4xl font-bold text-white mb-6 relative z-10">Don't See a Perfect Fit?</h2>
+          <h2 className="text-4xl font-bold text-white mb-6 relative z-10">Still have Questions?</h2>
           <p className="text-white/40 font-body text-lg max-w-xl mx-auto mb-10 relative z-10">
-            We are always looking for exceptional talent. If you believe you can add value to the AECS ecosystem, send us your resume.
+            If you have issues with the form or specific queries regarding a role, reach out to our recruitment desk.
           </p>
           <a 
             href="mailto:Hassani854@gmail.com"
-            className="inline-flex items-center gap-3 px-12 py-5 bg-[#C8960C] text-[#0b1628] font-bold tracking-[0.2em] uppercase rounded-full hover:scale-105 transition-all relative z-10"
+            className="inline-flex items-center gap-3 px-12 py-5 bg-white/5 border border-white/10 text-white font-bold tracking-[0.2em] uppercase rounded-full hover:bg-white/10 transition-all relative z-10"
             style={{ fontSize: '11px', fontFamily: "'Inter', sans-serif" }}
           >
-            <Mail size={16} /> Send Resume
+            <Mail size={16} /> Recruitment Support
           </a>
         </div>
       </section>
