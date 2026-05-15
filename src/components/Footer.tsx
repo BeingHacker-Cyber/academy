@@ -1,7 +1,7 @@
 "use client";
 import React from 'react';
 import Link from 'next/link';
-import { Phone, Mail, MapPin, Instagram, Facebook, Youtube, ArrowRight, GraduationCap } from 'lucide-react';
+import { Phone, Mail, MapPin, Instagram, Facebook, Youtube, ArrowRight } from 'lucide-react';
 import AECSLogo from './AECSLogo';
 import { motion } from 'framer-motion';
 
@@ -24,7 +24,7 @@ export default function Footer() {
   const year = new Date().getFullYear();
 
   return (
-    <footer className="bg-[#0E0D0B] text-white pt-16 pb-10 overflow-hidden relative border-t border-white/5">
+    <footer className="bg-[#0b1628] text-white pt-16 pb-10 overflow-hidden relative border-t border-white/5">
       <div className="container mx-auto px-6 max-w-7xl relative z-10">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-[1.2fr_0.8fr_0.8fr_1fr] gap-10 mb-16">
           
@@ -129,9 +129,10 @@ export default function Footer() {
             </div>
           </div>
           
-          <div className="flex items-center gap-2 px-4 py-2 bg-white/5 border border-white/10 rounded-full">
-            <GraduationCap size={12} className="text-[#C8960C]" />
-            <span className="font-accent text-[8px] font-bold tracking-[0.2em] uppercase text-white/40">Est. 2014</span>
+          <div className="flex items-center gap-2">
+            <span className="font-accent text-[9px] font-bold tracking-[0.15em] uppercase text-white/40">
+              Developed by <a href="https://www.linkedin.com/in/muhammadxahmed/" target="_blank" rel="noopener noreferrer" className="text-[#C8960C] hover:underline transition-all">Muhammad Ahmed</a>
+            </span>
           </div>
         </div>
       </div>
