@@ -1,9 +1,7 @@
-
 'use server';
 
 import { Resend } from 'resend';
 
-//const resend = new Resend(process.env.RESEND_API_KEY);
 const OWNER_EMAIL = 'hassani854@gmail.com';
 
 interface EnrollmentData {
@@ -19,16 +17,18 @@ interface EnrollmentData {
 }
 
 export async function submitEnrollmentAction(data: EnrollmentData) {
-  if (!process.env.RESEND_API_KEY) {
+  const apiKey = process.env.RESEND_API_KEY;
+  if (!apiKey) {
     throw new Error('RESEND_API_KEY is not configured in .env file');
   }
 
+  const resend = new Resend(apiKey);
   const subjectsList = data.subjects.join(', ');
 
   try {
     // 1. Send Branded Email to Student
     await resend.emails.send({
-      from: 'AECS Academy <admissions@resend.dev>',
+      from: 'AECS Academy <onboarding@resend.dev>',
       to: [data.email],
       subject: 'Confirmation: Your Application to AECS Academy',
       html: `
@@ -62,7 +62,7 @@ export async function submitEnrollmentAction(data: EnrollmentData) {
 
     // 2. Send Detailed Alert to Owner
     await resend.emails.send({
-      from: 'AECS System <system@resend.dev>',
+      from: 'AECS System <onboarding@resend.dev>',
       to: [OWNER_EMAIL],
       subject: `New Enrollment: ${data.fullName} | ${data.classLevel}`,
       html: `
