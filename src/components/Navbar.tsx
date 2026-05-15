@@ -21,7 +21,7 @@ const NAV_LINKS = [
 ];
 
 /* ── Enhanced Magnetic CTA ── */
-function MagneticCTA({ href }: { href: string }) {
+function MagneticCTA({ href, className = "" }: { href: string; className?: string }) {
   const ref = useRef<HTMLAnchorElement>(null);
   const mx = useMotionValue(0);
   const my = useMotionValue(0);
@@ -41,7 +41,7 @@ function MagneticCTA({ href }: { href: string }) {
       }}
       onMouseLeave={() => { mx.set(0); my.set(0); }}
       whileTap={{ scale: 0.96 }}
-      className="group inline-flex items-center gap-3 px-7 py-3.5 bg-[#7B1C2E] text-white font-accent text-[10px] font-bold tracking-[0.15em] uppercase rounded-full shadow-lg hover:shadow-[#7B1C2E]/40 transition-all duration-300 relative overflow-hidden"
+      className={`group inline-flex items-center gap-3 px-5 sm:px-7 py-2.5 sm:py-3.5 bg-[#7B1C2E] text-white font-accent text-[9px] sm:text-[10px] font-bold tracking-[0.15em] uppercase rounded-full shadow-lg hover:shadow-[#7B1C2E]/40 transition-all duration-300 relative overflow-hidden ${className}`}
     >
       <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/10 to-white/0 -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
       <span className="relative z-10">Enroll Now</span>
@@ -99,7 +99,7 @@ export default function Navbar() {
                 </Link>
               </motion.div>
 
-              <nav className="hidden md:flex items-center gap-1">
+              <nav className="hidden lg:flex items-center gap-1">
                 {NAV_LINKS.map((l) => {
                   const active = pathname === l.href;
                   return (
@@ -126,16 +126,14 @@ export default function Navbar() {
                 })}
               </nav>
 
-              <div className="flex items-center gap-4">
-                <div className="hidden md:block">
-                   <MagneticCTA href="/register" />
-                </div>
+              <div className="flex items-center gap-3 sm:gap-4">
+                <MagneticCTA href="/register" />
                 <button 
-                  className="md:hidden p-3 bg-[#7B1C2E]/5 rounded-full text-[#7B1C2E] hover:bg-[#7B1C2E] hover:text-white transition-all duration-300" 
+                  className="lg:hidden p-2.5 sm:p-3 bg-[#7B1C2E]/5 rounded-full text-[#7B1C2E] hover:bg-[#7B1C2E] hover:text-white transition-all duration-300" 
                   onClick={() => setOpen(true)}
                   aria-label="Open menu"
                 >
-                  <Menu size={20} />
+                  <Menu size={18} />
                 </button>
               </div>
             </div>
@@ -160,14 +158,14 @@ export default function Navbar() {
               exit={{ x: "110%", opacity: 0 }}
               transition={{ type: "spring", stiffness: 300, damping: 30 }}
             >
-              <div className="p-8 flex items-center justify-between border-b border-white/5">
+              <div className="p-8 flex items-center justify-between border-b border-white/5 flex-shrink-0">
                 <AECSLogo size="sm" inverted />
                 <button className="w-10 h-10 bg-white/5 rounded-full flex items-center justify-center text-white/40 hover:text-white hover:bg-[#7B1C2E] transition-all duration-300" onClick={() => setOpen(false)}>
                   <X size={20} />
                 </button>
               </div>
 
-              <nav className="flex-1 px-8 py-12 flex flex-col justify-center gap-2">
+              <nav className="flex-1 px-8 py-10 flex flex-col gap-2 overflow-y-auto scrollbar-hide">
                 {NAV_LINKS.map((l, i) => (
                   <motion.div
                     key={l.name}
@@ -175,18 +173,18 @@ export default function Navbar() {
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: i * 0.08 + 0.1 }}
                   >
-                    <Link href={l.href} className={`flex items-center justify-between py-5 group ${pathname === l.href ? 'text-white' : 'text-white/20'}`}>
-                      <span className="font-display text-4xl font-bold group-hover:text-white transition-colors">{l.name}</span>
+                    <Link href={l.href} className={`flex items-center justify-between py-4 group ${pathname === l.href ? 'text-white' : 'text-white/20'}`}>
+                      <span className="font-display text-3xl sm:text-4xl font-bold group-hover:text-white transition-colors">{l.name}</span>
                       <span className="font-accent text-[8px] font-bold bg-[#7B1C2E] text-white w-6 h-6 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300">0{i+1}</span>
                     </Link>
                   </motion.div>
                 ))}
               </nav>
 
-              <div className="p-8 space-y-4">
-                <Link href="/register" className="w-full flex items-center justify-center gap-3 py-5 bg-[#7B1C2E] text-white font-accent text-[10px] font-bold tracking-[0.2em] uppercase rounded-full hover:shadow-lg hover:shadow-[#7B1C2E]/20 transition-all duration-300">
-                  Enroll Now <ArrowRight size={14} />
-                </Link>
+              <div className="p-8 border-t border-white/5 flex-shrink-0">
+                <p className="text-white/30 text-[9px] uppercase tracking-widest text-center font-accent">
+                  Excellence in Cambridge Education
+                </p>
               </div>
             </motion.aside>
           </>
