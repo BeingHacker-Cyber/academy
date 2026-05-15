@@ -1,3 +1,4 @@
+
 'use client';
 
 import React, { useState, useEffect } from 'react';
@@ -18,13 +19,14 @@ import {
 import { Card, CardContent } from '@/components/ui/card';
 import {
   User, BookOpen, Briefcase, CheckCircle2, ChevronRight, ChevronLeft,
-  Plus, Trash2, Loader2, PartyPopper, Home
+  Plus, Trash2, Loader2, PartyPopper, Home, Target
 } from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
 import { submitCareerApplicationAction } from '@/app/actions/career-application';
 
 const formSchema = z.object({
+  appliedRole: z.string().min(1, 'Please select a role'),
   fullName: z.string().min(3, 'Full name must be at least 3 characters'),
   guardianName: z.string().min(3, 'Guardian name is required'),
   email: z.string().email('Invalid email address'),
@@ -51,6 +53,19 @@ const formSchema = z.object({
 
 type FormValues = z.infer<typeof formSchema>;
 
+const ROLES = [
+  'IGCSE Mathematics Faculty',
+  'English Language Specialist',
+  'Computer Science Instructor',
+  'Physics Specialist',
+  'Chemistry / Biology Faculty',
+  'Business Studies & Economics',
+  'Accounting Specialist',
+  'Pakistan Studies & Islamiat',
+  'Administrative Staff',
+  'Other'
+];
+
 export default function CareerApplicationForm() {
   const [step, setStep] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -60,6 +75,7 @@ export default function CareerApplicationForm() {
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
+      appliedRole: '',
       fullName: '', guardianName: '', email: '', phone: '+92 ',
       city: '', primaryAddress: '', secondaryAddress: '',
       qualifications: [{ degreeType: 'Bachelors', degreeName: '', startYear: '', endYear: '', grade: '' }],
@@ -98,7 +114,7 @@ export default function CareerApplicationForm() {
 
   const nextStep = async () => {
     let fieldsToValidate: any[] = [];
-    if (step === 1) fieldsToValidate = ['fullName', 'guardianName', 'email', 'phone', 'city', 'primaryAddress'];
+    if (step === 1) fieldsToValidate = ['appliedRole', 'fullName', 'guardianName', 'email', 'phone', 'city', 'primaryAddress'];
     if (step === 2) fieldsToValidate = ['qualifications'];
     if (step === 3) fieldsToValidate = ['isFresher', 'experience'];
 
@@ -112,7 +128,7 @@ export default function CareerApplicationForm() {
       const result = await submitCareerApplicationAction(values);
       if (result.success) {
         setIsSuccess(true);
-        toast({ title: 'Application Submitted', description: 'We have received your career profile.' });
+        toast({ title: 'Application Submitted', description: 'Your profile has been shared with our HR desk.' });
       } else {
         throw new Error(result.error);
       }
@@ -125,83 +141,108 @@ export default function CareerApplicationForm() {
 
   if (isSuccess) {
     return (
-      <div className="max-w-lg mx-auto text-center py-16 animate-fade-up">
-        <div className="w-20 h-20 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-6">
-          <PartyPopper size={40} className="text-primary" />
+      <div className="max-w-lg mx-auto text-center py-20 px-4 font-sans">
+        <div className="w-24 h-24 bg-primary/5 rounded-full flex items-center justify-center mx-auto mb-8">
+          <PartyPopper size={48} className="text-primary" />
         </div>
-        <h2 className="text-3xl font-bold text-slate-900 mb-4">Application Successful!</h2>
-        <p className="text-slate-600 mb-8">Thank you for your interest in AECS Academy. We will review your application and get back to you shortly.</p>
-        <Button onClick={() => window.location.href = '/'} className="rounded-full px-8">
-          <Home size={16} className="mr-2" /> Return Home
+        <h2 className="text-3xl font-bold text-slate-900 mb-4">Application Sent!</h2>
+        <p className="text-slate-600 mb-10 text-lg leading-relaxed">
+          Thank you for choosing AECS Academy, <strong>{watch('fullName')}</strong>. Your expertise for the <strong>{watch('appliedRole')}</strong> role is now with our recruitment team.
+        </p>
+        <Button onClick={() => window.location.href = '/'} className="rounded-full px-10 h-14 text-base font-semibold shadow-xl shadow-primary/20">
+          <Home size={18} className="mr-2" /> Return to Home
         </Button>
       </div>
     );
   }
 
   return (
-    <div className="max-w-3xl mx-auto py-8">
-      {/* Step Indicator */}
-      <div className="flex items-center justify-center mb-12">
+    <div className="max-w-3xl mx-auto py-8 font-sans px-4">
+      {/* Progress */}
+      <div className="flex items-center justify-center mb-16">
         {[
-          { icon: User, label: 'Personal' },
-          { icon: BookOpen, label: 'Education' },
-          { icon: Briefcase, label: 'Experience' },
+          { icon: User, label: 'Profile' },
+          { icon: BookOpen, label: 'Academic' },
+          { icon: Briefcase, label: 'Work' },
           { icon: CheckCircle2, label: 'Review' }
         ].map((s, i) => (
           <React.Fragment key={i}>
             <div className="flex flex-col items-center">
               <div className={cn(
-                "w-10 h-10 rounded-full flex items-center justify-center border-2 transition-all",
-                step > i + 1 ? "bg-primary border-primary text-white" : step === i + 1 ? "bg-primary border-primary text-white scale-110 shadow-lg" : "bg-white border-slate-200 text-slate-400"
+                "w-12 h-12 rounded-full flex items-center justify-center border-2 transition-all duration-500",
+                step > i + 1 ? "bg-primary border-primary text-white" : step === i + 1 ? "bg-primary border-primary text-white scale-110 shadow-lg shadow-primary/20" : "bg-white border-slate-200 text-slate-400"
               )}>
-                {step > i + 1 ? <CheckCircle2 size={18} /> : <s.icon size={16} />}
+                {step > i + 1 ? <CheckCircle2 size={20} /> : <s.icon size={20} />}
               </div>
-              <span className={cn("mt-2 text-[10px] font-bold uppercase tracking-wider", step === i + 1 ? "text-primary" : "text-slate-400")}>{s.label}</span>
+              <span className={cn("mt-3 text-[10px] font-bold uppercase tracking-[0.2em]", step === i + 1 ? "text-primary" : "text-slate-400")}>{s.label}</span>
             </div>
-            {i < 3 && <div className={cn("flex-1 h-0.5 mx-2", step > i + 1 ? "bg-primary" : "bg-slate-100")} />}
+            {i < 3 && <div className={cn("flex-1 h-0.5 mx-3", step > i + 1 ? "bg-primary" : "bg-slate-100")} />}
           </React.Fragment>
         ))}
       </div>
 
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
           {step === 1 && (
-            <Card className="rounded-2xl shadow-sm border-slate-100">
+            <Card className="rounded-[2rem] shadow-xl shadow-slate-200/50 border-slate-100 overflow-hidden">
+              <div className="bg-slate-50/80 p-6 border-b border-slate-100">
+                <h3 className="font-bold text-slate-800 flex items-center gap-2"><User size={18} className="text-primary" /> Personal Information</h3>
+              </div>
               <CardContent className="p-8 space-y-6">
+                <FormField control={form.control} name="appliedRole" render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-xs font-bold uppercase tracking-wider text-slate-500">Position Applied For *</FormLabel>
+                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                      <FormControl>
+                        <SelectTrigger className="h-12 rounded-xl border-slate-200">
+                          <SelectValue placeholder="Select a role" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        {ROLES.map(role => <SelectItem key={role} value={role}>{role}</SelectItem>)}
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )} />
+
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <FormField control={form.control} name="fullName" render={({ field }) => (
-                    <FormItem><FormLabel className="text-xs font-bold uppercase">Full Name *</FormLabel><FormControl><Input placeholder="John Doe" {...field} /></FormControl><FormMessage /></FormItem>
+                    <FormItem><FormLabel className="text-xs font-bold uppercase tracking-wider text-slate-500">Full Name *</FormLabel><FormControl><Input placeholder="John Doe" className="h-12 rounded-xl border-slate-200" {...field} /></FormControl><FormMessage /></FormItem>
                   )} />
                   <FormField control={form.control} name="guardianName" render={({ field }) => (
-                    <FormItem><FormLabel className="text-xs font-bold uppercase">Father/Guardian Name *</FormLabel><FormControl><Input placeholder="Guardian Name" {...field} /></FormControl><FormMessage /></FormItem>
+                    <FormItem><FormLabel className="text-xs font-bold uppercase tracking-wider text-slate-500">Father/Guardian Name *</FormLabel><FormControl><Input placeholder="Guardian Name" className="h-12 rounded-xl border-slate-200" {...field} /></FormControl><FormMessage /></FormItem>
                   )} />
                   <FormField control={form.control} name="email" render={({ field }) => (
-                    <FormItem><FormLabel className="text-xs font-bold uppercase">Email Address *</FormLabel><FormControl><Input type="email" placeholder="john@example.com" {...field} /></FormControl><FormMessage /></FormItem>
+                    <FormItem><FormLabel className="text-xs font-bold uppercase tracking-wider text-slate-500">Email Address *</FormLabel><FormControl><Input type="email" placeholder="john@example.com" className="h-12 rounded-xl border-slate-200" {...field} /></FormControl><FormMessage /></FormItem>
                   )} />
                   <FormField control={form.control} name="phone" render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="text-xs font-bold uppercase">Phone Number *</FormLabel>
+                      <FormLabel className="text-xs font-bold uppercase tracking-wider text-slate-500">Phone Number *</FormLabel>
                       <div className="relative flex items-center">
-                        <span className="absolute left-3">🇵🇰</span>
-                        <FormControl><Input className="pl-11" {...field} onChange={handlePhoneChange} /></FormControl>
+                        <span className="absolute left-4">🇵🇰</span>
+                        <FormControl><Input className="h-12 rounded-xl border-slate-200 pl-12" {...field} onChange={handlePhoneChange} /></FormControl>
                       </div>
                       <FormMessage />
                     </FormItem>
                   )} />
                   <FormField control={form.control} name="city" render={({ field }) => (
-                    <FormItem><FormLabel className="text-xs font-bold uppercase">City *</FormLabel><FormControl><Input placeholder="Lahore" {...field} /></FormControl><FormMessage /></FormItem>
+                    <FormItem className="md:col-span-2"><FormLabel className="text-xs font-bold uppercase tracking-wider text-slate-500">City *</FormLabel><FormControl><Input placeholder="Lahore" className="h-12 rounded-xl border-slate-200" {...field} /></FormControl><FormMessage /></FormItem>
                   )} />
                 </div>
+                
                 <FormField control={form.control} name="primaryAddress" render={({ field }) => (
-                  <FormItem><FormLabel className="text-xs font-bold uppercase">Primary Address *</FormLabel><FormControl><Textarea rows={3} {...field} /></FormControl><FormMessage /></FormItem>
+                  <FormItem><FormLabel className="text-xs font-bold uppercase tracking-wider text-slate-500">Primary Address *</FormLabel><FormControl><Textarea rows={3} className="rounded-xl border-slate-200" {...field} /></FormControl><FormMessage /></FormItem>
                 )} />
-                <div className="flex items-center gap-2">
+
+                <div className="flex items-center gap-3 p-4 bg-slate-50 rounded-xl border border-slate-100">
                   <Checkbox id="sameAddr" checked={sameAddr} onCheckedChange={v => setSameAddr(!!v)} />
-                  <label htmlFor="sameAddr" className="text-sm text-slate-600">Secondary address is the same as primary</label>
+                  <label htmlFor="sameAddr" className="text-sm text-slate-600 font-medium cursor-pointer">Secondary address is the same as primary</label>
                 </div>
+
                 {!sameAddr && (
                   <FormField control={form.control} name="secondaryAddress" render={({ field }) => (
-                    <FormItem><FormLabel className="text-xs font-bold uppercase">Secondary Address</FormLabel><FormControl><Textarea rows={3} {...field} /></FormControl><FormMessage /></FormItem>
+                    <FormItem><FormLabel className="text-xs font-bold uppercase tracking-wider text-slate-500">Secondary Address</FormLabel><FormControl><Textarea rows={3} className="rounded-xl border-slate-200" {...field} /></FormControl><FormMessage /></FormItem>
                   )} />
                 )}
               </CardContent>
@@ -209,32 +250,32 @@ export default function CareerApplicationForm() {
           )}
 
           {step === 2 && (
-            <Card className="rounded-2xl shadow-sm border-slate-100">
-              <CardContent className="p-8 space-y-6">
-                <div className="flex items-center justify-between border-b pb-4">
-                  <h3 className="font-bold text-lg">Qualifications</h3>
-                  <Button type="button" variant="outline" size="sm" onClick={() => appendQual({ degreeType: 'Bachelors', degreeName: '', startYear: '', endYear: '', grade: '' })}>
-                    <Plus size={14} className="mr-1" /> Add Degree
-                  </Button>
-                </div>
+            <Card className="rounded-[2rem] shadow-xl border-slate-100 overflow-hidden">
+              <div className="bg-slate-50/80 p-6 border-b border-slate-100 flex items-center justify-between">
+                <h3 className="font-bold text-slate-800 flex items-center gap-2"><BookOpen size={18} className="text-primary" /> Qualifications</h3>
+                <Button type="button" variant="outline" size="sm" onClick={() => appendQual({ degreeType: 'Bachelors', degreeName: '', startYear: '', endYear: '', grade: '' })} className="rounded-full border-primary/20 text-primary">
+                  <Plus size={14} className="mr-1" /> Add Degree
+                </Button>
+              </div>
+              <CardContent className="p-8 space-y-8">
                 {qualFields.map((field, index) => (
-                  <div key={field.id} className="p-4 border rounded-xl space-y-4 relative bg-slate-50/50">
-                    {index > 0 && <Button type="button" variant="ghost" size="icon" className="absolute top-2 right-2 text-red-500" onClick={() => removeQual(index)}><Trash2 size={16} /></Button>}
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div key={field.id} className="p-6 border border-slate-100 rounded-2xl space-y-5 relative bg-white shadow-sm">
+                    {index > 0 && <Button type="button" variant="ghost" size="icon" className="absolute top-4 right-4 text-red-400 hover:text-red-500 hover:bg-red-50" onClick={() => removeQual(index)}><Trash2 size={16} /></Button>}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                       <FormField control={form.control} name={`qualifications.${index}.degreeType`} render={({ field }) => (
-                        <FormItem><FormLabel className="text-xs font-bold uppercase">Degree *</FormLabel><Select onValueChange={field.onChange} defaultValue={field.value}><FormControl><SelectTrigger><SelectValue /></SelectTrigger></FormControl><SelectContent><SelectItem value="Matric">Matric</SelectItem><SelectItem value="Intermediate">Intermediate</SelectItem><SelectItem value="Diploma">Diploma</SelectItem><SelectItem value="Bachelors">Bachelors</SelectItem><SelectItem value="Master">Master</SelectItem><SelectItem value="PHD">PHD</SelectItem></SelectContent></Select><FormMessage /></FormItem>
+                        <FormItem><FormLabel className="text-[10px] font-bold uppercase text-slate-400">Type *</FormLabel><Select onValueChange={field.onChange} defaultValue={field.value}><FormControl><SelectTrigger className="h-11 rounded-xl"><SelectValue /></SelectTrigger></FormControl><SelectContent><SelectItem value="Matric">Matric</SelectItem><SelectItem value="Intermediate">Intermediate</SelectItem><SelectItem value="Diploma">Diploma</SelectItem><SelectItem value="Bachelors">Bachelors</SelectItem><SelectItem value="Master">Master</SelectItem><SelectItem value="PHD">PHD</SelectItem></SelectContent></Select><FormMessage /></FormItem>
                       )} />
                       <FormField control={form.control} name={`qualifications.${index}.degreeName`} render={({ field }) => (
-                        <FormItem><FormLabel className="text-xs font-bold uppercase">Degree Name *</FormLabel><FormControl><Input placeholder="B.Sc Computer Science" {...field} /></FormControl><FormMessage /></FormItem>
+                        <FormItem><FormLabel className="text-[10px] font-bold uppercase text-slate-400">Degree Name *</FormLabel><FormControl><Input placeholder="e.g. B.Sc Physics" className="h-11 rounded-xl" {...field} /></FormControl><FormMessage /></FormItem>
                       )} />
                       <FormField control={form.control} name={`qualifications.${index}.startYear`} render={({ field }) => (
-                        <FormItem><FormLabel className="text-xs font-bold uppercase">Started *</FormLabel><FormControl><Input placeholder="2018" {...field} /></FormControl><FormMessage /></FormItem>
+                        <FormItem><FormLabel className="text-[10px] font-bold uppercase text-slate-400">Start Year *</FormLabel><FormControl><Input placeholder="2018" className="h-11 rounded-xl" {...field} /></FormControl><FormMessage /></FormItem>
                       )} />
                       <FormField control={form.control} name={`qualifications.${index}.endYear`} render={({ field }) => (
-                        <FormItem><FormLabel className="text-xs font-bold uppercase">Ended *</FormLabel><FormControl><Input placeholder="2022 or Ongoing" {...field} /></FormControl><FormMessage /></FormItem>
+                        <FormItem><FormLabel className="text-[10px] font-bold uppercase text-slate-400">End Year *</FormLabel><FormControl><Input placeholder="2022 or Ongoing" className="h-11 rounded-xl" {...field} /></FormControl><FormMessage /></FormItem>
                       )} />
                       <FormField control={form.control} name={`qualifications.${index}.grade`} render={({ field }) => (
-                        <FormItem className="md:col-span-2"><FormLabel className="text-xs font-bold uppercase">Marks/CGPA *</FormLabel><FormControl><Input placeholder="3.8/4.0" {...field} /></FormControl><FormMessage /></FormItem>
+                        <FormItem className="md:col-span-2"><FormLabel className="text-[10px] font-bold uppercase text-slate-400">Marks / CGPA *</FormLabel><FormControl><Input placeholder="3.8/4.0" className="h-11 rounded-xl" {...field} /></FormControl><FormMessage /></FormItem>
                       )} />
                     </div>
                   </div>
@@ -244,78 +285,87 @@ export default function CareerApplicationForm() {
           )}
 
           {step === 3 && (
-            <Card className="rounded-2xl shadow-sm border-slate-100">
-              <CardContent className="p-8 space-y-6">
-                <div className="flex items-center justify-between border-b pb-4">
-                  <h3 className="font-bold text-lg">Experience</h3>
-                  <div className="flex items-center gap-2">
-                    <FormField control={form.control} name="isFresher" render={({ field }) => (
-                      <div className="flex items-center gap-2">
-                        <Checkbox id="isFresher" checked={field.value} onCheckedChange={field.onChange} />
-                        <label htmlFor="isFresher" className="text-sm font-medium">I am a Fresher</label>
-                      </div>
-                    )} />
-                  </div>
+            <Card className="rounded-[2rem] shadow-xl border-slate-100 overflow-hidden">
+              <div className="bg-slate-50/80 p-6 border-b border-slate-100 flex items-center justify-between">
+                <h3 className="font-bold text-slate-800 flex items-center gap-2"><Briefcase size={18} className="text-primary" /> Work Experience</h3>
+                <div className="flex items-center gap-2 bg-white px-3 py-1.5 rounded-full border border-slate-100">
+                  <FormField control={form.control} name="isFresher" render={({ field }) => (
+                    <div className="flex items-center gap-2">
+                      <Checkbox id="isFresher" checked={field.value} onCheckedChange={field.onChange} />
+                      <label htmlFor="isFresher" className="text-xs font-bold text-slate-600 cursor-pointer">I am a Fresher</label>
+                    </div>
+                  )} />
                 </div>
-                {!isFresher && (
-                  <div className="space-y-4">
+              </div>
+              <CardContent className="p-8 space-y-6">
+                {!isFresher ? (
+                  <div className="space-y-6">
                     {expFields.map((field, index) => (
-                      <div key={field.id} className="p-4 border rounded-xl space-y-4 relative bg-slate-50/50">
-                        <Button type="button" variant="ghost" size="icon" className="absolute top-2 right-2 text-red-500" onClick={() => removeExp(index)}><Trash2 size={16} /></Button>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div key={field.id} className="p-6 border border-slate-100 rounded-2xl space-y-5 relative bg-white shadow-sm">
+                        <Button type="button" variant="ghost" size="icon" className="absolute top-4 right-4 text-red-400" onClick={() => removeExp(index)}><Trash2 size={16} /></Button>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                           <FormField control={form.control} name={`experience.${index}.company`} render={({ field }) => (
-                            <FormItem><FormLabel className="text-xs font-bold uppercase">Company Name *</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>
+                            <FormItem><FormLabel className="text-[10px] font-bold uppercase text-slate-400">Company Name *</FormLabel><FormControl><Input className="h-11 rounded-xl" {...field} /></FormControl><FormMessage /></FormItem>
                           )} />
                           <FormField control={form.control} name={`experience.${index}.position`} render={({ field }) => (
-                            <FormItem><FormLabel className="text-xs font-bold uppercase">Position *</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>
+                            <FormItem><FormLabel className="text-[10px] font-bold uppercase text-slate-400">Position *</FormLabel><FormControl><Input className="h-11 rounded-xl" {...field} /></FormControl><FormMessage /></FormItem>
                           )} />
                           <FormField control={form.control} name={`experience.${index}.startYear`} render={({ field }) => (
-                            <FormItem><FormLabel className="text-xs font-bold uppercase">Started *</FormLabel><FormControl><Input placeholder="2020" {...field} /></FormControl><FormMessage /></FormItem>
+                            <FormItem><FormLabel className="text-[10px] font-bold uppercase text-slate-400">Start Year *</FormLabel><FormControl><Input placeholder="2020" className="h-11 rounded-xl" {...field} /></FormControl><FormMessage /></FormItem>
                           )} />
                           <FormField control={form.control} name={`experience.${index}.endYear`} render={({ field }) => (
-                            <FormItem><FormLabel className="text-xs font-bold uppercase">Ended *</FormLabel><FormControl><Input placeholder="2023 or Currently working" {...field} /></FormControl><FormMessage /></FormItem>
+                            <FormItem><FormLabel className="text-[10px] font-bold uppercase text-slate-400">End Year *</FormLabel><FormControl><Input placeholder="2023 or Present" className="h-11 rounded-xl" {...field} /></FormControl><FormMessage /></FormItem>
                           )} />
                         </div>
                       </div>
                     ))}
-                    <Button type="button" variant="outline" className="w-full" onClick={() => appendExp({ company: '', position: '', startYear: '', endYear: '' })}>
-                      <Plus size={14} className="mr-1" /> Add Experience
+                    <Button type="button" variant="outline" className="w-full h-12 rounded-xl border-dashed border-2 hover:border-primary hover:text-primary transition-all" onClick={() => appendExp({ company: '', position: '', startYear: '', endYear: '' })}>
+                      <Plus size={16} className="mr-2" /> Add Professional History
                     </Button>
                   </div>
+                ) : (
+                  <div className="text-center py-16 bg-slate-50 rounded-[2rem] border border-dashed border-slate-200">
+                    <Target size={32} className="mx-auto text-slate-300 mb-4" />
+                    <p className="text-slate-500 font-medium">Freshers are welcome at AECS Academy.<br /><span className="text-xs">Proceed to review your profile.</span></p>
+                  </div>
                 )}
-                {isFresher && <div className="text-center py-8 text-slate-500">No experience required for Freshers. Proceed to next.</div>}
               </CardContent>
             </Card>
           )}
 
           {step === 4 && (
-            <Card className="rounded-2xl shadow-sm border-slate-100">
+            <Card className="rounded-[2rem] shadow-xl border-slate-100 overflow-hidden">
+              <div className="bg-slate-50/80 p-6 border-b border-slate-100">
+                <h3 className="font-bold text-slate-800">Final Review</h3>
+              </div>
               <CardContent className="p-8 space-y-6">
-                <h3 className="font-bold text-xl mb-4">Review Your Application</h3>
-                <div className="space-y-4 bg-slate-50 p-6 rounded-xl text-sm">
-                  <div><span className="text-slate-400 uppercase text-[10px] font-bold block">Name</span>{watch('fullName')}</div>
-                  <div><span className="text-slate-400 uppercase text-[10px] font-bold block">Guardian</span>{watch('guardianName')}</div>
-                  <div><span className="text-slate-400 uppercase text-[10px] font-bold block">Email</span>{watch('email')}</div>
-                  <div><span className="text-slate-400 uppercase text-[10px] font-bold block">Phone</span>{watch('phone')}</div>
+                <div className="grid grid-cols-2 gap-x-12 gap-y-6 bg-slate-50/50 p-8 rounded-[2rem] border border-slate-100">
+                  <div><span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest block mb-1">Position</span><p className="font-bold text-primary">{watch('appliedRole')}</p></div>
+                  <div><span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest block mb-1">Full Name</span><p className="font-bold text-slate-700">{watch('fullName')}</p></div>
+                  <div><span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest block mb-1">Email</span><p className="text-slate-600">{watch('email')}</p></div>
+                  <div><span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest block mb-1">Phone</span><p className="text-slate-600">{watch('phone')}</p></div>
                 </div>
+                
                 <FormField control={form.control} name="consent" render={({ field }) => (
-                  <FormItem className="flex items-start gap-3 p-4 bg-slate-50/50 rounded-xl border">
+                  <FormItem className="flex items-start gap-3 p-6 bg-primary/5 rounded-2xl border border-primary/10">
                     <FormControl><Checkbox checked={field.value} onCheckedChange={field.onChange} className="mt-1" /></FormControl>
-                    <div className="text-xs text-slate-600">I agree to the <a href="/terms-and-conditions" className="text-primary font-bold">Terms</a> and <a href="/privacy-policy" className="text-primary font-bold">Privacy Policy</a>.</div>
+                    <div className="text-xs text-slate-600 leading-relaxed">
+                      I confirm that the information provided is accurate and I agree to the <a href="/terms-and-conditions" className="text-primary font-bold hover:underline">Terms & Conditions</a> of AECS Academy recruitment.
+                    </div>
                   </FormItem>
                 )} />
               </CardContent>
             </Card>
           )}
 
-          <div className="flex justify-between mt-8">
-            {step > 1 && <Button type="button" variant="outline" onClick={() => setStep(s => s - 1)} className="rounded-full px-8"><ChevronLeft size={16} className="mr-2" /> Back</Button>}
+          <div className="flex justify-between mt-12 gap-4">
+            {step > 1 && <Button type="button" variant="ghost" onClick={() => setStep(s => s - 1)} className="rounded-full px-8 h-12 text-slate-500 hover:text-slate-800"><ChevronLeft size={18} className="mr-2" /> Back</Button>}
             <div className="flex-1" />
             {step < 4 ? (
-              <Button type="button" onClick={nextStep} className="rounded-full px-10">Next <ChevronRight size={16} className="ml-2" /></Button>
+              <Button type="button" onClick={nextStep} className="rounded-full px-12 h-14 text-base font-semibold shadow-lg shadow-primary/20">Continue <ChevronRight size={18} className="ml-2" /></Button>
             ) : (
-              <Button type="submit" disabled={isSubmitting} className="rounded-full px-12 h-12">
-                {isSubmitting ? <><Loader2 size={16} className="mr-2 animate-spin" /> Submitting...</> : 'Submit Application'}
+              <Button type="submit" disabled={isSubmitting} className="rounded-full px-16 h-14 text-base font-bold shadow-xl shadow-primary/30">
+                {isSubmitting ? <><Loader2 size={18} className="mr-2 animate-spin" /> Processing...</> : 'Submit Final Application'}
               </Button>
             )}
           </div>
