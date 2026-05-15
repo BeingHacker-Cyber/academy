@@ -1,240 +1,185 @@
 "use client";
-import React, { useState, useEffect, useRef } from 'react';
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
-import { Phone, ArrowRight, Menu, X } from 'lucide-react';
-import AECSLogo from './AECSLogo';
-import { cn } from '@/lib/utils';
+import React, { useState, useEffect, useRef } from "react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import {
+  motion,
+  AnimatePresence,
+  useMotionValue,
+  useSpring,
+} from "framer-motion";
+import { Phone, ArrowRight, Menu, X } from "lucide-react";
+import AECSLogo from "./AECSLogo";
 
-const links = [
-  { name: 'Home',    href: '/'        },
-  { name: 'About',   href: '/about'   },
-  { name: 'Faculty', href: '/faculty' },
-  { name: 'Gallery', href: '/gallery' },
-  { name: 'Contact', href: '/contact' },
+const NAV_LINKS = [
+  { name: "Home",    href: "/"        },
+  { name: "About",   href: "/about"   },
+  { name: "Faculty", href: "/faculty" },
+  { name: "Gallery", href: "/gallery" },
+  { name: "Contact", href: "/contact" },
 ];
 
+/* ── Magnetic CTA ── */
+function MagneticCTA({ href }: { href: string }) {
+  const ref = useRef<HTMLAnchorElement>(null);
+  const mx = useMotionValue(0);
+  const my = useMotionValue(0);
+  const sx = useSpring(mx, { stiffness: 180, damping: 18 });
+  const sy = useSpring(my, { stiffness: 180, damping: 18 });
+
+  return (
+    <motion.a
+      ref={ref}
+      href={href}
+      style={{ x: sx, y: sy }}
+      onMouseMove={(e) => {
+        if (!ref.current) return;
+        const r = ref.current.getBoundingClientRect();
+        mx.set((e.clientX - r.left - r.width / 2) * 0.4);
+        my.set((e.clientY - r.top - r.height / 2) * 0.4);
+      }}
+      onMouseLeave={() => { mx.set(0); my.set(0); }}
+      whileTap={{ scale: 0.95 }}
+      className="inline-flex items-center gap-3 px-6 py-3 bg-[#7B1C2E] text-white font-accent text-[9px] font-bold tracking-widest uppercase relative overflow-hidden"
+    >
+      <span className="relative z-10">Enroll Now</span>
+      <motion.span
+        initial={false}
+        animate={{ x: 0 }}
+        whileHover={{ x: 3 }}
+        transition={{ type: "spring", stiffness: 300 }}
+        className="relative z-10"
+      >
+        <ArrowRight size={13} />
+      </motion.span>
+    </motion.a>
+  );
+}
+
 export default function Navbar() {
-  const [open,     setOpen]     = useState(false);
+  const [open, setOpen] = useState(false);
+  const [hidden, setHidden] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  const [hidden,   setHidden]   = useState(false);
   const lastY = useRef(0);
   const pathname = usePathname();
 
   useEffect(() => {
-    let ticking = false;
-    const onScroll = () => {
-      if (ticking) return;
-      ticking = true;
-      requestAnimationFrame(() => {
-        const y = window.scrollY;
-        setScrolled(y > 40);
-        setHidden(y > lastY.current + 8 && y > 250);
-        if (y < lastY.current) setHidden(false);
-        lastY.current = y;
-        ticking = false;
-      });
+    const fn = () => {
+      const y = window.scrollY;
+      setScrolled(y > 32);
+      if (y > lastY.current + 6 && y > 200) setHidden(true);
+      else if (y < lastY.current - 4) setHidden(false);
+      lastY.current = y;
     };
-    window.addEventListener('scroll', onScroll, { passive: true });
-    return () => window.removeEventListener('scroll', onScroll);
+    window.addEventListener("scroll", fn, { passive: true });
+    return () => window.removeEventListener("scroll", fn);
   }, []);
 
   useEffect(() => { setOpen(false); }, [pathname]);
-
-  useEffect(() => {
-    document.body.style.overflow = open ? 'hidden' : '';
-    return () => { document.body.style.overflow = ''; };
-  }, [open]);
+  useEffect(() => { document.body.style.overflow = open ? "hidden" : ""; }, [open]);
 
   return (
     <>
-      <header
-        className={cn(
-          'fixed top-0 left-0 right-0 z-50 transition-all duration-500',
-          hidden ? '-translate-y-full' : 'translate-y-0',
-          scrolled
-            ? 'bg-white/98 shadow-[0_1px_0_rgba(123,28,46,0.08),0_2px_16px_rgba(0,0,0,0.04)]'
-            : 'bg-[#FAF7F2]',
-        )}
-        style={{ backdropFilter: scrolled ? 'blur(12px)' : 'none' }}
+      <div
+        className="fixed top-0 left-0 right-0 z-[100]"
+        style={{ transform: hidden ? "translateY(-110%)" : "translateY(0)", transition: "transform .5s cubic-bezier(.77,0,.18,1)" }}
       >
-        {/* Top micro-bar: contact info */}
-        <div
-          className={cn(
-            'overflow-hidden transition-all duration-400',
-            scrolled ? 'h-0 opacity-0' : 'h-8 opacity-100',
-          )}
-          style={{ background: '#7B1C2E' }}
-        >
-          <div className="container mx-auto px-6 max-w-7xl h-full flex items-center justify-between">
-            <p
-              style={{ fontFamily: "'Montserrat', sans-serif", fontSize: '9px', letterSpacing: '0.25em', color: 'rgba(255,255,255,0.7)', fontWeight: 500, textTransform: 'uppercase' }}
-            >
-              Academy for Excellence in Cambridge Studies — Lahore
-            </p>
-            <a
-              href="tel:03144033054"
-              style={{ fontFamily: "'Montserrat', sans-serif", fontSize: '9px', letterSpacing: '0.2em', color: 'rgba(255,255,255,0.7)', fontWeight: 500, display: 'flex', alignItems: 'center', gap: '6px', textDecoration: 'none' }}
-            >
-              <Phone size={10} />
-              0314 4033054
-            </a>
-          </div>
-        </div>
+        <div className={`transition-all duration-500 ${scrolled ? 'mt-4 mx-4 px-4' : 'px-8 lg:px-24'}`}>
+          <div className={`transition-all duration-500 ${scrolled ? 'glass rounded-full px-8 py-3 shadow-lg' : 'py-8 border-b border-black/5 bg-transparent'}`}>
+            <div className="max-w-[1440px] mx-auto flex items-center justify-between">
+              <motion.div whileHover={{ scale: 1.02 }} transition={{ type: "spring", stiffness: 300 }}>
+                <Link href="/" aria-label="AECS home">
+                  <AECSLogo size={scrolled ? "sm" : "md"} />
+                </Link>
+              </motion.div>
 
-        {/* Main nav row */}
-        <div className="container mx-auto px-6 max-w-7xl">
-          <div className={cn(
-            'flex items-center justify-between border-b transition-all duration-400',
-            scrolled ? 'h-16 border-[rgba(123,28,46,0.06)]' : 'h-[72px] border-[rgba(123,28,46,0.1)]',
-          )}>
-
-            <Link href="/" aria-label="AECS home">
-              <AECSLogo size={scrolled ? 'sm' : 'md'} />
-            </Link>
-
-            {/* Desktop nav — vertical divider style */}
-            <nav className="hidden md:flex items-center h-full" aria-label="Main navigation">
-              {links.map((l, i) => {
-                const active = pathname === l.href;
-                return (
-                  <Link
-                    key={l.name}
-                    href={l.href}
-                    className={cn(
-                      'relative h-full flex items-center px-6 transition-colors duration-200 group',
-                      'border-l border-[rgba(123,28,46,0.08)]',
-                      i === links.length - 1 ? 'border-r' : '',
-                    )}
-                  >
-                    <span
-                      style={{
-                        fontFamily: "'Montserrat', sans-serif",
-                        fontSize: '10px',
-                        fontWeight: 600,
-                        letterSpacing: '0.2em',
-                        textTransform: 'uppercase',
-                        color: active ? '#7B1C2E' : 'rgba(26,26,26,0.45)',
-                        transition: 'color 0.2s',
-                      }}
-                      className="group-hover:!text-[#7B1C2E]"
+              <nav className="hidden md:flex items-center gap-10">
+                {NAV_LINKS.map((l) => {
+                  const active = pathname === l.href;
+                  return (
+                    <Link 
+                      key={l.name} 
+                      href={l.href} 
+                      className={`font-accent text-[9px] font-bold tracking-[0.2em] uppercase transition-all hover:text-[#7B1C2E] ${active ? 'text-[#7B1C2E]' : 'text-black/40'}`}
                     >
                       {l.name}
-                    </span>
-                    {/* Active / hover bottom fill */}
-                    <span
-                      className={cn(
-                        'absolute bottom-0 left-0 right-0 h-[2px] transition-transform duration-300 origin-left',
-                        active ? 'scale-x-100' : 'scale-x-0 group-hover:scale-x-100',
-                      )}
-                      style={{ background: '#7B1C2E' }}
-                    />
-                  </Link>
-                );
-              })}
-            </nav>
+                    </Link>
+                  );
+                })}
+              </nav>
 
-            {/* CTA */}
-            <div className="hidden md:block">
-              <Link
-                href="/register"
-                className="group inline-flex items-center gap-2 px-6 py-2.5 rounded-none font-semibold transition-all duration-300 hover:gap-3"
-                style={{
-                  fontFamily: "'Montserrat', sans-serif",
-                  fontSize: '10px',
-                  letterSpacing: '0.18em',
-                  textTransform: 'uppercase',
-                  background: '#7B1C2E',
-                  color: '#fff',
-                  fontWeight: 700,
-                }}
-              >
-                Enroll Now
-                <ArrowRight size={12} className="transition-transform duration-300 group-hover:translate-x-0.5" />
-              </Link>
+              <div className="flex items-center gap-6">
+                <a href="tel:03144033054" className={`hidden lg:flex items-center gap-2 font-accent text-[9px] font-bold tracking-widest uppercase transition-colors ${scrolled ? 'text-black/60' : 'text-black/40'} hover:text-[#7B1C2E]`}>
+                  <Phone size={12} /> 0314 4033054
+                </a>
+                <div className="hidden md:block">
+                   <MagneticCTA href="/register" />
+                </div>
+                <button 
+                  className="md:hidden p-3 border border-black/5 bg-white/10 backdrop-blur rounded-full text-black/60 hover:text-[#7B1C2E] transition-colors" 
+                  onClick={() => setOpen(true)}
+                  aria-label="Open menu"
+                >
+                  <Menu size={20} />
+                </button>
+              </div>
             </div>
-
-            {/* Mobile toggle */}
-            <button
-              className="md:hidden w-10 h-10 flex items-center justify-center text-[#1a1a1a]"
-              onClick={() => setOpen(!open)}
-              aria-label={open ? 'Close menu' : 'Open menu'}
-              aria-expanded={open}
-            >
-              {open ? <X size={22} /> : <Menu size={22} />}
-            </button>
           </div>
         </div>
-      </header>
+      </div>
 
-      {/* Mobile drawer */}
-      <div
-        className={cn(
-          'fixed inset-0 z-40 md:hidden bg-black/30 transition-opacity duration-300',
-          open ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none',
+      <AnimatePresence>
+        {open && (
+          <>
+            <motion.div 
+              className="fixed inset-0 z-[110] bg-black/60 backdrop-blur-md" 
+              initial={{ opacity: 0 }} 
+              animate={{ opacity: 1 }} 
+              exit={{ opacity: 0 }} 
+              onClick={() => setOpen(false)} 
+            />
+            <motion.aside
+              className="fixed top-0 right-0 bottom-0 z-[120] w-[min(88vw,400px)] bg-[#0E0D0B] shadow-2xl flex flex-col"
+              initial={{ x: "100%" }}
+              animate={{ x: 0 }}
+              exit={{ x: "100%" }}
+              transition={{ type: "spring", stiffness: 320, damping: 34 }}
+            >
+              <div className="p-8 flex items-center justify-between border-b border-white/5">
+                <AECSLogo size="sm" inverted />
+                <button className="w-10 h-10 border border-white/10 flex items-center justify-center text-white/40 hover:text-white hover:border-[#7B1C2E] transition-all" onClick={() => setOpen(false)}>
+                  <X size={20} />
+                </button>
+              </div>
+
+              <nav className="flex-1 px-8 py-12 flex flex-col justify-center">
+                {NAV_LINKS.map((l, i) => (
+                  <motion.div
+                    key={l.name}
+                    initial={{ opacity: 0, x: 30 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: i * 0.08 + 0.1 }}
+                  >
+                    <Link href={l.href} className={`flex items-center justify-between py-6 border-b border-white/5 group ${pathname === l.href ? 'text-white' : 'text-white/20'}`}>
+                      <span className="font-display text-5xl font-bold group-hover:text-white transition-colors">{l.name}</span>
+                      <span className="font-accent text-[9px] font-bold text-[#7B1C2E] opacity-0 group-hover:opacity-100 transition-opacity">0{i+1}</span>
+                    </Link>
+                  </motion.div>
+                ))}
+              </nav>
+
+              <div className="p-8 border-t border-white/5">
+                <Link href="/register" className="w-full flex items-center justify-center gap-3 py-5 bg-[#7B1C2E] text-white font-accent text-[10px] font-bold tracking-[0.2em] uppercase">
+                  Enroll Now <ArrowRight size={14} />
+                </Link>
+                <a href="tel:03144033054" className="mt-4 flex items-center justify-center gap-3 py-4 border border-white/10 text-white/40 font-accent text-[9px] font-bold tracking-widest uppercase hover:text-white hover:border-white/30 transition-all">
+                  <Phone size={12} /> 0314 4033054
+                </a>
+              </div>
+            </motion.aside>
+          </>
         )}
-        onClick={() => setOpen(false)}
-        aria-hidden="true"
-      />
-      <aside
-        className={cn(
-          'fixed top-0 right-0 bottom-0 z-50 md:hidden w-[80vw] max-w-[340px] bg-[#FAF7F2] flex flex-col transition-transform duration-500',
-          open ? 'translate-x-0' : 'translate-x-full',
-        )}
-      >
-        <div className="flex items-center justify-between px-6 h-[88px] border-b border-[rgba(123,28,46,0.1)]">
-          <AECSLogo size="sm" />
-          <button
-            className="w-9 h-9 flex items-center justify-center text-[#7B1C2E]"
-            onClick={() => setOpen(false)}
-            aria-label="Close menu"
-          >
-            <X size={20} />
-          </button>
-        </div>
-        <nav className="flex-1 px-6 py-8">
-          {links.map((l) => {
-            const active = pathname === l.href;
-            return (
-              <Link
-                key={l.name}
-                href={l.href}
-                className="flex items-center justify-between py-4 border-b border-[rgba(123,28,46,0.07)] group"
-              >
-                <span
-                  style={{
-                    fontFamily: "'Georgia', serif",
-                    fontSize: '1.5rem',
-                    fontWeight: 700,
-                    color: active ? '#7B1C2E' : 'rgba(26,26,26,0.65)',
-                  }}
-                  className="group-hover:text-[#7B1C2E] transition-colors"
-                >
-                  {l.name}
-                </span>
-                <ArrowRight size={16} className="text-[#7B1C2E] opacity-0 group-hover:opacity-100 transition-opacity" />
-              </Link>
-            );
-          })}
-        </nav>
-        <div className="px-6 pb-8 pt-4 border-t border-[rgba(123,28,46,0.07)]">
-          <Link
-            href="/register"
-            onClick={() => setOpen(false)}
-            className="flex items-center justify-center gap-2 w-full py-4 font-bold"
-            style={{
-              fontFamily: "'Montserrat', sans-serif",
-              fontSize: '10px',
-              letterSpacing: '0.2em',
-              textTransform: 'uppercase',
-              background: '#7B1C2E',
-              color: '#fff',
-            }}
-          >
-            Enroll Now <ArrowRight size={13} />
-          </Link>
-        </div>
-      </aside>
+      </AnimatePresence>
     </>
   );
 }

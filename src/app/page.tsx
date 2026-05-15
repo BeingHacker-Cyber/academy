@@ -1,470 +1,454 @@
 "use client";
-import React from 'react';
-import Link from 'next/link';
-import Image from 'next/image';
+import React, { useEffect, useRef, useState } from "react";
+import Link from "next/link";
+import Image from "next/image";
+import {
+  motion,
+  useScroll,
+  useTransform,
+  useSpring,
+  useInView,
+  useMotionValue,
+  AnimatePresence,
+} from "framer-motion";
 import {
   ArrowRight, CheckCircle2, Users, GraduationCap,
   Award, BookOpen, Star, TrendingUp, Lightbulb,
-  ShieldCheck, Monitor, Building2, MapPin, Phone, Trophy,
-} from 'lucide-react';
-import { PlaceHolderImages } from '@/app/lib/placeholder-images';
+  ShieldCheck, Monitor, Building2, Phone, Trophy,
+} from "lucide-react";
+import { PlaceHolderImages } from "@/app/lib/placeholder-images";
 
-/* ─────────────────────────────────────────────
-   DATA
-───────────────────────────────────────────── */
-const stats = [
-  { value: '500+', label: 'Students Enrolled',  icon: Users         },
-  { value: '15+',  label: 'Expert Faculty',      icon: GraduationCap },
-  { value: '10+',  label: 'Years of Excellence', icon: Award         },
-  { value: '100%', label: 'Success Rate',        icon: Trophy        },
+/* ─────────────────────── DATA ─────────────────────── */
+const STATS = [
+  { val: 500, suffix: "+", label: "Students Enrolled",  icon: Users         },
+  { val: 15,  suffix: "+", label: "Expert Faculty",     icon: GraduationCap },
+  { val: 10,  suffix: "+", label: "Years Excellence",   icon: Award         },
+  { val: 100, suffix: "%", label: "Success Rate",       icon: Trophy        },
 ];
 
-const pillars = [
-  {
-    num: '01',
-    title: 'Expert Mentorship',
-    desc: 'Cambridge-certified educators with decades of O-Level exam experience.',
-    icon: Star,
-  },
-  {
-    num: '02',
-    title: 'Personalised Focus',
-    desc: 'Small batches ensure every student gets dedicated conceptual guidance.',
-    icon: Lightbulb,
-  },
-  {
-    num: '03',
-    title: 'Proven Results',
-    desc: 'A legacy of A* and A grades in IGCSE & O-Level year after year.',
-    icon: TrendingUp,
-  },
-  {
-    num: '04',
-    title: 'Curriculum Mastery',
-    desc: 'Deep subject expertise aligned precisely with the Cambridge syllabus.',
-    icon: ShieldCheck,
-  },
+const PILLARS = [
+  { n: "01", title: "Expert Mentorship",   desc: "Cambridge-certified educators with decades of O-Level exam experience.", icon: Star      },
+  { n: "02", title: "Personalised Focus",  desc: "Small batches ensure every student gets dedicated conceptual guidance.", icon: Lightbulb },
+  { n: "03", title: "Proven Results",      desc: "Legacy of A* and A grades in IGCSE & O-Level year after year.",        icon: TrendingUp},
+  { n: "04", title: "Curriculum Mastery",  desc: "Deep subject expertise aligned precisely with the Cambridge syllabus.", icon: ShieldCheck},
 ];
 
-const subjects = [
-  'Mathematics', 'English', 'Physics', 'Chemistry', 'Biology',
-  'Computer Science', 'Business Studies', 'Economics',
-  'Accounting', 'Pak Studies', 'Islamiat',
+const SUBJECTS = [
+  "Mathematics","English","Physics","Chemistry","Biology",
+  "Computer Science","Business Studies","Economics",
+  "Accounting","Pak Studies","Islamiat",
 ];
 
-/* ─────────────────────────────────────────────
-   COMPONENT
-───────────────────────────────────────────── */
-export default function Home() {
-  const heroImg      = PlaceHolderImages.find(i => i.id === 'hero-bg');
-  const classroomImg = PlaceHolderImages.find(i => i.id === 'classroom');
+const TESTIMONIALS = [
+  { name: "Ayesha Malik", grade: "A* Mathematics · 2024", initials: "AM", text: "AECS transformed my understanding completely. Teachers here don't just teach — they mentor. I went from a C to an A* in one term." },
+  { name: "Hassan Raza",  grade: "A* Physics · 2024",     initials: "HR", text: "Small batch sizes meant my teacher actually knew my weaknesses. The personalised attention here is unlike any tuition center I've been to." },
+  { name: "Sara Ahmed",   grade: "A English · 2023",      initials: "SA", text: "The structured approach to essay writing changed everything. AECS prepared me better than my school ever could." },
+];
+
+/* ─────────────────────── HELPERS ─────────────────────── */
+const ease = [0.22, 1, 0.36, 1] as const;
+
+function FadeUp({ children, delay = 0, className = "" }: { children: React.ReactNode; delay?: number; className?: string }) {
+  const ref = useRef(null);
+  const inView = useInView(ref, { once: true, margin: "-60px" });
+  return (
+    <motion.div
+      ref={ref}
+      className={className}
+      initial={{ opacity: 0, y: 40 }}
+      animate={inView ? { opacity: 1, y: 0 } : {}}
+      transition={{ duration: 0.7, delay, ease }}
+    >
+      {children}
+    </motion.div>
+  );
+}
+
+function CountUp({ target, suffix, active }: { target: number; suffix: string; active: boolean }) {
+  const [val, setVal] = useState(0);
+  useEffect(() => {
+    if (!active) return;
+    let s = 0;
+    const step = target / 60;
+    const t = setInterval(() => {
+      s = Math.min(s + step, target);
+      setVal(Math.floor(s));
+      if (s >= target) clearInterval(t);
+    }, 20);
+    return () => clearInterval(t);
+  }, [active, target]);
+  return <>{val}{suffix}</>;
+}
+
+/* ─────────────────────── CURSOR ─────────────────────── */
+function CustomCursor() {
+  const cx = useMotionValue(-100);
+  const cy = useMotionValue(-100);
+  const sx = useSpring(cx, { stiffness: 120, damping: 18, mass: 0.5 });
+  const sy = useSpring(cy, { stiffness: 120, damping: 18, mass: 0.5 });
+  const [hovered, setHovered] = useState(false);
+
+  useEffect(() => {
+    const move = (e: MouseEvent) => { cx.set(e.clientX); cy.set(e.clientY); };
+    const over = (e: MouseEvent) => {
+      if ((e.target as HTMLElement).closest("a,button,[data-cursor]")) setHovered(true);
+      else setHovered(false);
+    };
+    window.addEventListener("mousemove", move);
+    window.addEventListener("mouseover", over);
+    return () => { window.removeEventListener("mousemove", move); window.removeEventListener("mouseover", over); };
+  }, [cx, cy]);
 
   return (
-    <div style={{ fontFamily: "'Montserrat', sans-serif", background: '#fff', color: '#1a1a1a' }}>
+    <>
+      <motion.div
+        style={{ left: sx, top: sy, x: "-50%", y: "-50%", position: "fixed", pointerEvents: "none", zIndex: 9999 }}
+        animate={{ width: hovered ? 44 : 10, height: hovered ? 44 : 10, backgroundColor: hovered ? "rgba(123,28,46,0.15)" : "#7B1C2E", borderRadius: "50%", border: hovered ? "1px solid #7B1C2E" : "none" }}
+        transition={{ duration: 0.2, ease: "easeOut" }}
+      />
+      <motion.div
+        style={{ left: cx, top: cy, x: "-50%", y: "-50%", position: "fixed", pointerEvents: "none", zIndex: 9998, width: 4, height: 4, borderRadius: "50%", background: "#7B1C2E" }}
+      />
+    </>
+  );
+}
 
-      {/* ══════════════════════════════════════
-          1. HERO  — split layout, cream left panel
-      ══════════════════════════════════════ */}
-      <section style={{ background: '#FAF7F2', minHeight: '92vh', display: 'flex', alignItems: 'center', borderBottom: '1px solid rgba(123,28,46,0.08)' }}>
-        <div className="container mx-auto max-w-7xl" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 0, minHeight: '92vh' }}>
+/* ─────────────────────── MAIN ─────────────────────── */
+export default function HomePage() {
+  const heroImg      = PlaceHolderImages.find((i) => i.id === "hero-bg");
+  const classroomImg = PlaceHolderImages.find((i) => i.id === "classroom");
 
-          {/* LEFT — text */}
-          <div style={{ padding: '6rem 4rem 4rem 2rem', display: 'flex', flexDirection: 'column', justifyContent: 'center', borderRight: '1px solid rgba(123,28,46,0.08)' }}>
+  /* Parallax */
+  const { scrollY } = useScroll();
+  const heroImgY = useTransform(scrollY, [0, 600], [0, 80]);
+  const heroTextY = useTransform(scrollY, [0, 600], [0, -30]);
 
-            {/* Year tag */}
-            <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: '2.5rem' }}>
-              <div style={{ width: 32, height: 32, background: '#7B1C2E', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                <BookOpen size={15} color="#fff" />
-              </div>
-              <span style={{ fontFamily: "'Montserrat', sans-serif", fontSize: '9px', fontWeight: 700, letterSpacing: '0.32em', textTransform: 'uppercase', color: '#7B1C2E' }}>
+  /* Stats in-view */
+  const statsRef = useRef(null);
+  const statsInView = useInView(statsRef, { once: true, margin: "-80px" });
+
+  /* Testimonial */
+  const [activeT, setActiveT] = useState(0);
+  useEffect(() => {
+    const t = setInterval(() => setActiveT((p) => (p + 1) % TESTIMONIALS.length), 5000);
+    return () => clearInterval(t);
+  }, []);
+
+  /* Mouse tilt on hero image */
+  const tiltX = useMotionValue(0);
+  const tiltY = useMotionValue(0);
+  const sTiltX = useSpring(tiltX, { stiffness: 80, damping: 20 });
+  const sTiltY = useSpring(tiltY, { stiffness: 80, damping: 20 });
+
+  const handleHeroMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    const r = e.currentTarget.getBoundingClientRect();
+    const nx = (e.clientX - r.left) / r.width - 0.5;
+    const ny = (e.clientY - r.top) / r.height - 0.5;
+    tiltX.set(ny * 6);
+    tiltY.set(-nx * 6);
+  };
+  const handleHeroMouseLeave = () => { tiltX.set(0); tiltY.set(0); };
+
+  return (
+    <div className="relative">
+      <CustomCursor />
+
+      {/* Global CSS Overrides for this page */}
+      <style jsx global>{`
+        * { cursor: none !important; }
+        .stag { display: flex; align-items: center; gap: 10px; margin-bottom: 1.2rem; }
+        .stag-line { width: 28px; height: 1.5px; background: #7B1C2E; }
+        .stag-txt { font-family: 'DM Sans', sans-serif; font-size: 9px; font-weight: 600; letter-spacing: .32em; text-transform: uppercase; color: #7B1C2E; }
+        .h2s { font-family: 'Cormorant Garamond', Georgia, serif; font-size: clamp(2.2rem, 4vw, 3.6rem); font-weight: 600; color: #0E0D0B; line-height: 1.02; }
+        .h2s em { font-style: italic; color: #7B1C2E; }
+        .btn-pr {
+          display: inline-flex; align-items: center; gap: 9px;
+          padding: 14px 30px; background: #7B1C2E; color: #fff;
+          font-family: 'DM Sans', sans-serif; font-size: 10px; font-weight: 600;
+          letter-spacing: .2em; text-transform: uppercase;
+          position: relative; overflow: hidden; transition: 0.3s;
+        }
+        .btn-pr:hover { background: #5a1221; }
+      `}</style>
+
+      {/* ══════ HERO ══════ */}
+      <section className="min-h-[95vh] grid grid-cols-1 lg:grid-cols-[55%_45%] bg-[#FAF7F2] overflow-hidden relative">
+        <motion.div className="px-8 lg:px-24 py-24 flex flex-col justify-center relative z-10" style={{ y: heroTextY }}>
+          {/* Eyebrow */}
+          <FadeUp>
+            <div className="flex items-center gap-3 mb-10">
+              <motion.div className="w-8 h-8 bg-[#7B1C2E] flex items-center justify-center" whileHover={{ rotate: 15 }}>
+                <BookOpen size={14} color="#fff" />
+              </motion.div>
+              <span className="font-accent text-[9px] font-bold tracking-[0.3em] uppercase color-[#7B1C2E]">
                 Est. 2014 · Lake City, Lahore
               </span>
             </div>
+          </FadeUp>
 
-            <h1 style={{ fontFamily: "'Georgia', 'Times New Roman', serif", fontSize: 'clamp(3rem, 5.5vw, 5.2rem)', fontWeight: 700, lineHeight: 1.0, color: '#1a1a1a', marginBottom: '1.5rem' }}>
-              Cambridge<br />
-              <span style={{ color: '#7B1C2E' }}>Excellence,</span><br />
-              Delivered.
-            </h1>
+          {/* Headline */}
+          <div className="mb-8">
+            {["Cambridge", "Excellence,", "Delivered."].map((word, i) => (
+              <FadeUp key={i} delay={i * 0.1}>
+                <h1 className={`font-display text-[clamp(3.6rem,6.5vw,6.2rem)] font-bold leading-[0.92] ${i === 1 ? 'italic text-[#7B1C2E]' : 'text-[#0E0D0B]'}`}>
+                  {i === 2 ? <span className="text-outline">{word}</span> : word}
+                </h1>
+              </FadeUp>
+            ))}
+          </div>
 
-            {/* Thick rule */}
-            <div style={{ width: 48, height: 3, background: '#7B1C2E', marginBottom: '1.75rem' }} />
-
-            <p style={{ fontSize: '14px', fontWeight: 300, lineHeight: 1.9, color: 'rgba(26,26,26,0.55)', marginBottom: '2.5rem', maxWidth: 400 }}>
-              Lahore's most focused IGCSE &amp; O-Level academy — specialised coaching from Grade 6 through O-Level with 100% personalised attention and proven results.
+          <FadeUp delay={0.4}>
+            <p className="font-body text-sm font-light leading-relaxed text-[#0E0D0B]/50 max-w-[400px] mb-12">
+              Lahore's most focused IGCSE & O-Level academy — specialised coaching from Grade 6 through O-Level with 100% personalised attention.
             </p>
+          </FadeUp>
 
-            {/* Mode pills */}
-            <div style={{ display: 'flex', gap: 10, marginBottom: '2.5rem', flexWrap: 'wrap' }}>
-              {[
-                { icon: Monitor,   label: 'Online Classes' },
-                { icon: Building2, label: 'On Campus'      },
-              ].map(({ icon: Icon, label }) => (
-                <span
-                  key={label}
-                  style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '9px 18px', border: '1px solid rgba(123,28,46,0.2)', background: '#fff', fontSize: '10px', fontWeight: 600, letterSpacing: '0.18em', textTransform: 'uppercase', color: 'rgba(26,26,26,0.6)' }}
-                >
-                  <Icon size={12} style={{ color: '#7B1C2E' }} />
-                  {label}
-                </span>
-              ))}
-            </div>
-
-            <div style={{ display: 'flex', gap: 12 }}>
-              <Link
-                href="/register"
-                className="group"
-                style={{ display: 'inline-flex', alignItems: 'center', gap: 10, padding: '14px 30px', background: '#7B1C2E', color: '#fff', fontFamily: "'Montserrat', sans-serif", fontSize: '10px', fontWeight: 700, letterSpacing: '0.2em', textTransform: 'uppercase', textDecoration: 'none', transition: 'background 0.25s' }}
-              >
+          <FadeUp delay={0.5}>
+            <div className="flex flex-wrap gap-4 mb-12">
+              <Link href="/register" className="btn-pr" data-cursor>
                 Apply Now <ArrowRight size={14} />
               </Link>
-              <Link
-                href="/about"
-                style={{ display: 'inline-flex', alignItems: 'center', gap: 10, padding: '14px 30px', border: '1px solid rgba(26,26,26,0.2)', color: 'rgba(26,26,26,0.6)', fontFamily: "'Montserrat', sans-serif", fontSize: '10px', fontWeight: 600, letterSpacing: '0.2em', textTransform: 'uppercase', textDecoration: 'none', transition: 'all 0.2s' }}
-              >
-                Learn More
+              <Link href="/about" className="inline-flex items-center px-8 py-3.5 border border-black/10 font-accent text-[10px] font-bold tracking-widest uppercase hover:border-[#7B1C2E] hover:text-[#7B1C2E] transition-colors" data-cursor>
+                Our Legacy
               </Link>
             </div>
+          </FadeUp>
 
-            {/* Mini stats row */}
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 0, marginTop: '4rem', borderTop: '1px solid rgba(123,28,46,0.1)', paddingTop: '2rem' }}>
+          {/* Mini stats */}
+          <FadeUp delay={0.6}>
+            <div className="grid grid-cols-3 pt-12 border-t border-black/10 max-w-sm gap-8">
               {[
-                { val: '500+', lbl: 'Students'  },
-                { val: 'A*',   lbl: 'Avg Grade'  },
-                { val: '10+',  lbl: 'Years'      },
-              ].map(({ val, lbl }, i) => (
-                <div key={lbl} style={{ paddingRight: i < 2 ? '1.5rem' : 0, borderRight: i < 2 ? '1px solid rgba(123,28,46,0.1)' : 'none', paddingLeft: i > 0 ? '1.5rem' : 0 }}>
-                  <div style={{ fontFamily: "'Georgia', serif", fontSize: '2.4rem', fontWeight: 700, color: '#7B1C2E', lineHeight: 1 }}>{val}</div>
-                  <div style={{ fontFamily: "'Montserrat', sans-serif", fontSize: '8px', fontWeight: 600, letterSpacing: '0.28em', textTransform: 'uppercase', color: 'rgba(26,26,26,0.35)', marginTop: 6 }}>{lbl}</div>
+                { val: "500+", lbl: "Students" },
+                { val: "A*", lbl: "Avg Grade" },
+                { val: "10+", lbl: "Years" }
+              ].map(({ val, lbl }) => (
+                <div key={lbl}>
+                  <div className="font-display text-4xl font-bold text-[#7B1C2E] leading-none">{val}</div>
+                  <div className="font-accent text-[8px] font-bold tracking-widest uppercase text-black/30 mt-2">{lbl}</div>
                 </div>
               ))}
             </div>
+          </FadeUp>
+        </motion.div>
+
+        {/* Hero image panel */}
+        <motion.div
+          className="relative overflow-hidden hidden lg:block"
+          onMouseMove={handleHeroMouseMove}
+          onMouseLeave={handleHeroMouseLeave}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 1, delay: 0.3 }}
+        >
+          <motion.div style={{ position: "absolute", inset: 0, rotateX: sTiltX, rotateY: sTiltY }}>
+            <motion.div style={{ position: "absolute", inset: -20, y: heroImgY }}>
+              <Image src={heroImg?.imageUrl ?? ""} alt="AECS Campus" fill className="object-cover" priority />
+            </motion.div>
+            <div className="absolute inset-0 bg-gradient-to-br from-black/20 to-transparent" />
+          </motion.div>
+
+          <div className="absolute top-10 left-10 bg-[#7B1C2E] p-5">
+            <div className="font-display text-3xl font-bold text-white leading-none">10+</div>
+            <div className="font-accent text-[8px] font-bold tracking-widest uppercase text-white/40 mt-1">Years Excellence</div>
           </div>
 
-          {/* RIGHT — image with overlays */}
-          <div style={{ position: 'relative', overflow: 'hidden' }}>
-            <div style={{ position: 'absolute', inset: 0 }}>
-              <Image
-                src={heroImg?.imageUrl ?? ''}
-                alt="AECS Academy students"
-                fill
-                className="object-cover"
-                priority
-              />
-              {/* Light warm overlay */}
-              <div style={{ position: 'absolute', inset: 0, background: 'rgba(250,247,242,0.15)' }} />
+          <motion.div 
+            className="absolute bottom-0 left-0 right-0 glass px-8 py-6 flex items-center gap-4"
+            initial={{ y: 50, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ delay: 1 }}
+          >
+            <Trophy size={20} className="text-[#7B1C2E]" />
+            <div>
+              <p className="font-display font-bold text-lg text-[#0E0D0B] leading-none">A* Average Grade</p>
+              <p className="font-accent text-[8px] font-bold tracking-widest uppercase text-black/40 mt-1">Every academic session</p>
             </div>
-
-            {/* Corner badge — top left */}
-            <div style={{ position: 'absolute', top: '2.5rem', left: '2.5rem', background: '#7B1C2E', padding: '1.25rem 1.5rem', zIndex: 10 }}>
-              <div style={{ fontFamily: "'Georgia', serif", fontSize: '1.8rem', fontWeight: 700, color: '#fff', lineHeight: 1 }}>10+</div>
-              <div style={{ fontFamily: "'Montserrat', sans-serif", fontSize: '8px', fontWeight: 600, letterSpacing: '0.25em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.5)', marginTop: 5 }}>Yrs</div>
-            </div>
-
-            {/* Bottom strip */}
-            <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, background: 'rgba(250,247,242,0.96)', borderTop: '1px solid rgba(123,28,46,0.08)', padding: '1.25rem 2rem', display: 'flex', alignItems: 'center', gap: 14, zIndex: 10 }}>
-              <Trophy size={18} style={{ color: '#7B1C2E', flexShrink: 0 }} />
-              <div>
-                <div style={{ fontFamily: "'Georgia', serif", fontSize: '1rem', fontWeight: 700, color: '#1a1a1a', lineHeight: 1 }}>A* Average Grade</div>
-                <div style={{ fontFamily: "'Montserrat', sans-serif", fontSize: '9px', color: 'rgba(26,26,26,0.4)', letterSpacing: '0.2em', textTransform: 'uppercase', marginTop: 4 }}>Every Academic Session</div>
-              </div>
-            </div>
-          </div>
-        </div>
+          </motion.div>
+        </motion.div>
       </section>
 
-
-      {/* ══════════════════════════════════════
-          2. TICKER STRIP
-      ══════════════════════════════════════ */}
-      <div style={{ background: '#7B1C2E', padding: '11px 0', overflow: 'hidden', borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
-        <div
-          style={{ display: 'flex', gap: 0, whiteSpace: 'nowrap', animation: 'ticker 28s linear infinite' }}
+      {/* ══════ TICKER ══════ */}
+      <div className="bg-[#7B1C2E] py-4 overflow-hidden border-y border-white/5">
+        <motion.div
+          className="flex whitespace-nowrap"
+          animate={{ x: [0, "-50%"] }}
+          transition={{ repeat: Infinity, duration: 30, ease: "linear" }}
         >
-          {['IGCSE Specialists', 'O-Level Experts', 'Grade 6–11', 'Online & On-Campus', 'Lake City Lahore', '100% Success Rate', 'Cambridge Certified', 'Small Batch Sizes'].flatMap((t, i, a) => [
-            <span key={`t${i}`} style={{ fontFamily: "'Montserrat', sans-serif", fontSize: '9px', fontWeight: 600, letterSpacing: '0.25em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.75)', padding: '0 28px', display: 'inline-block' }}>{t}</span>,
-            <span key={`s${i}`} style={{ color: 'rgba(255,255,255,0.3)', display: 'inline-block' }}>✦</span>,
-          ])}
-          {['IGCSE Specialists', 'O-Level Experts', 'Grade 6–11', 'Online & On-Campus', 'Lake City Lahore', '100% Success Rate', 'Cambridge Certified', 'Small Batch Sizes'].flatMap((t, i) => [
-            <span key={`t2${i}`} style={{ fontFamily: "'Montserrat', sans-serif", fontSize: '9px', fontWeight: 600, letterSpacing: '0.25em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.75)', padding: '0 28px', display: 'inline-block' }}>{t}</span>,
-            <span key={`s2${i}`} style={{ color: 'rgba(255,255,255,0.3)', display: 'inline-block' }}>✦</span>,
-          ])}
-        </div>
-        <style>{`@keyframes ticker { from { transform: translateX(0); } to { transform: translateX(-50%); } }`}</style>
+          {[...Array(2)].map((_, i) => (
+            <div key={i} className="flex items-center gap-12 px-6">
+              {["IGCSE Specialists", "O-Level Experts", "Grade 6–11", "Online & On-Campus", "Lake City Lahore", "Cambridge Certified"].map(t => (
+                <div key={t} className="flex items-center gap-4">
+                  <span className="font-accent text-[10px] font-bold tracking-[0.25em] uppercase text-white/70">{t}</span>
+                  <span className="text-white/20 text-xs">✦</span>
+                </div>
+              ))}
+            </div>
+          ))}
+        </motion.div>
       </div>
 
-
-      {/* ══════════════════════════════════════
-          3. STATS — horizontal rule style
-      ══════════════════════════════════════ */}
-      <section style={{ background: '#fff', borderBottom: '1px solid rgba(123,28,46,0.07)' }}>
-        <div className="container mx-auto max-w-7xl">
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)' }}>
-            {stats.map((s, i) => (
-              <div
-                key={i}
-                style={{
-                  padding: '3rem 2rem',
-                  borderRight: i < 3 ? '1px solid rgba(123,28,46,0.07)' : 'none',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'center',
-                  textAlign: 'center',
-                  gap: '1rem',
-                }}
-              >
-                <s.icon size={20} style={{ color: '#7B1C2E' }} />
-                <div style={{ fontFamily: "'Georgia', serif", fontSize: '2.8rem', fontWeight: 700, color: '#1a1a1a', lineHeight: 1 }}>{s.value}</div>
-                <div style={{ fontFamily: "'Montserrat', sans-serif", fontSize: '9px', fontWeight: 600, letterSpacing: '0.26em', textTransform: 'uppercase', color: 'rgba(26,26,26,0.35)' }}>{s.label}</div>
+      {/* ══════ STATS ══════ */}
+      <section className="bg-white border-b border-black/5" ref={statsRef}>
+        <div className="wrap py-24 grid grid-cols-2 md:grid-cols-4 gap-px bg-black/5">
+          {STATS.map((s, i) => (
+            <div key={i} className="bg-white p-12 flex flex-col items-center text-center group">
+              <s.icon size={22} className="text-[#7B1C2E] mb-6 transition-transform group-hover:scale-110" />
+              <div className="font-display text-5xl font-bold text-[#0E0D0B] mb-2 leading-none">
+                <CountUp target={s.val} suffix={s.suffix} active={statsInView} />
               </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-
-      {/* ══════════════════════════════════════
-          4. WHY AECS — editorial numbered list
-      ══════════════════════════════════════ */}
-      <section style={{ background: '#FAF7F2', padding: '6rem 0', borderBottom: '1px solid rgba(123,28,46,0.07)' }}>
-        <div className="container mx-auto px-6 max-w-7xl">
-
-          {/* Header */}
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '4rem', marginBottom: '4rem', alignItems: 'end' }}>
-            <div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: '1.25rem' }}>
-                <div style={{ width: 24, height: 2, background: '#7B1C2E' }} />
-                <span style={{ fontFamily: "'Montserrat', sans-serif", fontSize: '9px', fontWeight: 700, letterSpacing: '0.32em', textTransform: 'uppercase', color: '#7B1C2E' }}>
-                  Foundation for Brilliance
-                </span>
-              </div>
-              <h2 style={{ fontFamily: "'Georgia', serif", fontSize: 'clamp(2.2rem, 4vw, 3.4rem)', fontWeight: 700, color: '#1a1a1a', lineHeight: 1.05 }}>
-                Why Choose<br /><span style={{ color: '#7B1C2E' }}>AECS Academy?</span>
-              </h2>
+              <div className="font-accent text-[9px] font-bold tracking-widest uppercase text-black/30">{s.label}</div>
             </div>
-            <p style={{ fontFamily: "'Montserrat', sans-serif", fontSize: '13px', fontWeight: 300, lineHeight: 1.9, color: 'rgba(26,26,26,0.5)', paddingTop: '1rem' }}>
-              A structured, supportive environment designed specifically for the rigorous Cambridge curriculum — where every student's potential is fully realised.
-            </p>
+          ))}
+        </div>
+      </section>
+
+      {/* ══════ PILLARS ══════ */}
+      <section className="section bg-[#FAF7F2]">
+        <div className="wrap">
+          <div className="grid lg:grid-cols-2 gap-20 mb-20 items-end">
+            <FadeUp>
+              <div className="stag"><div className="stag-line" /><span className="stag-txt">The Advantage</span></div>
+              <h2 className="h2s">Why Choose<br /><em>AECS Academy?</em></h2>
+            </FadeUp>
+            <FadeUp delay={0.2}>
+              <p className="font-body text-sm font-light text-black/50 leading-relaxed max-w-md">
+                A structured, supportive environment designed for the rigorous Cambridge curriculum — where every student's potential is fully realised.
+              </p>
+            </FadeUp>
           </div>
 
-          {/* 4 pillars — large number + card */}
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '1px', background: 'rgba(123,28,46,0.08)' }}>
-            {pillars.map((p) => (
-              <div
-                key={p.num}
-                style={{ background: '#fff', padding: '2.5rem 2rem', position: 'relative', transition: 'all 0.3s', cursor: 'default' }}
-                onMouseEnter={e => { (e.currentTarget as HTMLElement).style.background = '#7B1C2E'; (e.currentTarget as HTMLElement).querySelectorAll('[data-flip]').forEach(el => { (el as HTMLElement).style.color = '#fff'; }); (e.currentTarget as HTMLElement).querySelector('[data-icon]')!.querySelector('*')!.setAttribute('stroke', '#fff'); }}
-                onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = '#fff'; (e.currentTarget as HTMLElement).querySelectorAll('[data-flip]').forEach((el, i) => { (el as HTMLElement).style.color = i === 0 ? 'rgba(26,26,26,0.05)' : i === 1 ? '#7B1C2E' : i === 2 ? '#1a1a1a' : 'rgba(26,26,26,0.5)'; }); }}
-              >
-                <p data-flip="num" style={{ fontFamily: "'Georgia', serif", fontSize: '4rem', fontWeight: 700, color: 'rgba(26,26,26,0.05)', lineHeight: 1, marginBottom: '1.5rem', transition: 'color 0.3s' }}>{p.num}</p>
-                <div data-icon style={{ marginBottom: '1rem' }}>
-                  <p.icon size={22} color="#7B1C2E" style={{ transition: 'stroke 0.3s' }} />
-                </div>
-                <p data-flip="title" style={{ fontFamily: "'Georgia', serif", fontSize: '1.2rem', fontWeight: 700, color: '#1a1a1a', marginBottom: '0.75rem', transition: 'color 0.3s' }}>{p.title}</p>
-                <p data-flip="desc" style={{ fontFamily: "'Montserrat', sans-serif", fontSize: '12px', fontWeight: 300, lineHeight: 1.75, color: 'rgba(26,26,26,0.5)', transition: 'color 0.3s' }}>{p.desc}</p>
-              </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-px bg-black/10">
+            {PILLARS.map((p, i) => (
+              <FadeUp key={p.n} delay={i * 0.1} className="bg-white p-10 relative group overflow-hidden">
+                <span className="font-display text-6xl font-bold text-black/[0.03] absolute top-6 right-6 leading-none transition-colors group-hover:text-[#7B1C2E]/5">{p.n}</span>
+                <p.icon size={24} className="text-[#7B1C2E] mb-8" />
+                <h3 className="font-display text-2xl font-bold text-[#0E0D0B] mb-4">{p.title}</h3>
+                <p className="font-body text-xs font-light text-black/50 leading-relaxed">{p.desc}</p>
+                <div className="absolute bottom-0 left-0 right-0 h-1 bg-[#7B1C2E] transform scale-x-0 group-hover:scale-x-100 transition-transform origin-left" />
+              </FadeUp>
             ))}
           </div>
         </div>
       </section>
 
-
-      {/* ══════════════════════════════════════
-          5. SUBJECTS — light, grid of tags
-      ══════════════════════════════════════ */}
-      <section style={{ background: '#fff', padding: '6rem 0', borderBottom: '1px solid rgba(123,28,46,0.07)' }}>
-        <div className="container mx-auto px-6 max-w-7xl">
-          <div style={{ display: 'grid', gridTemplateColumns: '5fr 7fr', gap: '5rem', alignItems: 'center' }}>
-
+      {/* ══════ SUBJECTS ══════ */}
+      <section className="section bg-white">
+        <div className="wrap">
+          <div className="grid lg:grid-cols-[45%_55%] gap-24 items-center">
             <div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: '1.25rem' }}>
-                <div style={{ width: 24, height: 2, background: '#7B1C2E' }} />
-                <span style={{ fontFamily: "'Montserrat', sans-serif", fontSize: '9px', fontWeight: 700, letterSpacing: '0.32em', textTransform: 'uppercase', color: '#7B1C2E' }}>Full Cambridge Curriculum</span>
-              </div>
-              <h2 style={{ fontFamily: "'Georgia', serif", fontSize: 'clamp(2rem, 3.5vw, 3rem)', fontWeight: 700, color: '#1a1a1a', lineHeight: 1.06, marginBottom: '1.5rem' }}>
-                Specialised<br /><span style={{ color: '#7B1C2E' }}>Subjects</span> We Offer
-              </h2>
-              <p style={{ fontFamily: "'Montserrat', sans-serif", fontSize: '13px', fontWeight: 300, lineHeight: 1.9, color: 'rgba(26,26,26,0.5)', marginBottom: '2rem' }}>
-                From core sciences to business studies — the complete Cambridge IGCSE &amp; O-Level curriculum, taught by subject experts.
-              </p>
-              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginBottom: '2rem' }}>
-                {subjects.map((sub) => (
-                  <span
-                    key={sub}
-                    style={{ display: 'inline-flex', alignItems: 'center', gap: 7, padding: '8px 14px', border: '1px solid rgba(123,28,46,0.18)', background: '#FAF7F2', fontFamily: "'Montserrat', sans-serif", fontSize: '10px', fontWeight: 600, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'rgba(26,26,26,0.65)', transition: 'all 0.2s', cursor: 'default' }}
-                    onMouseEnter={e => { (e.currentTarget as HTMLElement).style.background = '#7B1C2E'; (e.currentTarget as HTMLElement).style.color = '#fff'; (e.currentTarget as HTMLElement).style.borderColor = '#7B1C2E'; }}
-                    onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = '#FAF7F2'; (e.currentTarget as HTMLElement).style.color = 'rgba(26,26,26,0.65)'; (e.currentTarget as HTMLElement).style.borderColor = 'rgba(123,28,46,0.18)'; }}
-                  >
-                    <CheckCircle2 size={11} style={{ color: '#7B1C2E', flexShrink: 0 }} />
+              <FadeUp>
+                <div className="stag"><div className="stag-line" /><span className="stag-txt">Curriculum</span></div>
+                <h2 className="h2s mb-8">Specialised<br /><span className="text-[#7B1C2E]">Subjects</span> We Offer</h2>
+              </FadeUp>
+              
+              <div className="flex flex-wrap gap-2 mb-10">
+                {SUBJECTS.map((sub, i) => (
+                  <FadeUp key={sub} delay={i * 0.05} className="px-4 py-2 border border-black/10 font-accent text-[9px] font-bold tracking-widest uppercase text-black/40 hover:bg-[#7B1C2E] hover:text-white hover:border-[#7B1C2E] transition-all cursor-default">
                     {sub}
-                  </span>
+                  </FadeUp>
                 ))}
               </div>
-              <Link
-                href="/register"
-                style={{ display: 'inline-flex', alignItems: 'center', gap: 10, padding: '13px 28px', background: '#7B1C2E', color: '#fff', fontFamily: "'Montserrat', sans-serif", fontSize: '10px', fontWeight: 700, letterSpacing: '0.18em', textTransform: 'uppercase', textDecoration: 'none' }}
-              >
-                Explore &amp; Enroll <ArrowRight size={13} />
-              </Link>
+
+              <FadeUp delay={0.5}>
+                <Link href="/register" className="btn-pr" data-cursor>
+                  Explore & Enroll <ArrowRight size={14} />
+                </Link>
+              </FadeUp>
             </div>
 
-            {/* Classroom image */}
-            <div style={{ position: 'relative' }}>
-              <div style={{ aspectRatio: '4/3', overflow: 'hidden', border: '1px solid rgba(123,28,46,0.09)' }}>
-                <Image src={classroomImg?.imageUrl ?? ''} alt="AECS Classroom" fill className="object-cover" />
+            <FadeUp className="relative" delay={0.3}>
+              <div className="aspect-[4/3] relative overflow-hidden border border-black/10">
+                <Image src={classroomImg?.imageUrl ?? ""} alt="Modern Classroom" fill className="object-cover" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+                <div className="absolute bottom-8 left-8 text-white">
+                  <p className="font-display text-3xl font-bold">Grade 6 to O-Level</p>
+                  <p className="font-accent text-[10px] font-bold tracking-widest uppercase opacity-70">Cambridge Specialised Focus</p>
+                </div>
               </div>
-              {/* Grade badge */}
-              <div style={{ position: 'absolute', bottom: '-24px', right: '-18px', background: '#7B1C2E', border: '1px solid rgba(200,150,12,0.3)', padding: '1.5rem 2rem', textAlign: 'center' }}>
-                <div style={{ fontFamily: "'Georgia', serif", fontSize: '1.5rem', fontWeight: 700, color: '#fff', lineHeight: 1 }}>Grade 6</div>
-                <div style={{ fontFamily: "'Montserrat', sans-serif", fontSize: '8px', fontWeight: 600, letterSpacing: '0.22em', color: 'rgba(255,255,255,0.4)', textTransform: 'uppercase', margin: '6px 0' }}>through</div>
-                <div style={{ fontFamily: "'Georgia', serif", fontSize: '1.5rem', fontWeight: 700, color: '#C8960C', lineHeight: 1 }}>O Level</div>
+              {/* Overlapping decorative element */}
+              <div className="absolute -bottom-8 -right-8 w-40 h-40 bg-[#FAF7F2] border border-black/5 p-8 flex flex-col items-center justify-center text-center hidden md:flex">
+                <div className="font-display text-4xl font-bold text-[#7B1C2E]">15+</div>
+                <div className="font-accent text-[8px] font-bold tracking-widest uppercase text-black/30 mt-2">Expert Teachers</div>
               </div>
-            </div>
+            </FadeUp>
           </div>
         </div>
       </section>
 
+      {/* ══════ TESTIMONIALS ══════ */}
+      <section className="section bg-[#0E0D0B] text-white">
+        <div className="wrap grid lg:grid-cols-2 gap-24 items-center">
+          <div>
+            <FadeUp>
+              <div className="stag"><div className="stag-line" /><span className="stag-txt text-white/40">Success Stories</span></div>
+              <h2 className="h2s text-white mb-12 italic">Results That Speak<br /><span className="text-[#C8960C]">Volumes</span></h2>
+            </FadeUp>
 
-      {/* ══════════════════════════════════════
-          6. CAMPUS — light feature section
-      ══════════════════════════════════════ */}
-      <section style={{ background: '#FAF7F2', padding: '6rem 0', borderBottom: '1px solid rgba(123,28,46,0.07)' }}>
-        <div className="container mx-auto px-6 max-w-7xl">
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '5rem', alignItems: 'center' }}>
-
-            {/* Stats grid */}
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1px', background: 'rgba(123,28,46,0.08)' }}>
-              {[
-                { val: '100%', lbl: 'Pass Rate',         sub: 'Every session',       dark: true  },
-                { val: '10+',  lbl: 'Years Experience',  sub: 'Cambridge focus',      dark: false },
-                { val: '15+',  lbl: 'Expert Teachers',   sub: 'Certified educators',  dark: false },
-                { val: '500+', lbl: 'Students Enrolled', sub: '& counting',           dark: true  },
-              ].map(({ val, lbl, sub, dark }) => (
-                <div key={lbl} style={{ background: dark ? '#7B1C2E' : '#fff', padding: '2.5rem 2rem' }}>
-                  <div style={{ fontFamily: "'Georgia', serif", fontSize: '2.6rem', fontWeight: 700, color: dark ? '#fff' : '#1a1a1a', lineHeight: 1 }}>{val}</div>
-                  <div style={{ fontFamily: "'Montserrat', sans-serif", fontSize: '9px', fontWeight: 600, letterSpacing: '0.24em', textTransform: 'uppercase', color: dark ? 'rgba(255,255,255,0.6)' : 'rgba(26,26,26,0.5)', marginTop: 10, marginBottom: 4 }}>{lbl}</div>
-                  <div style={{ fontFamily: "'Montserrat', sans-serif", fontSize: '11px', color: dark ? 'rgba(255,255,255,0.35)' : 'rgba(26,26,26,0.35)', fontWeight: 300 }}>{sub}</div>
-                </div>
+            <div className="space-y-4">
+              {TESTIMONIALS.map((t, i) => (
+                <motion.div
+                  key={i}
+                  className={`p-8 border border-white/5 cursor-pointer transition-all ${activeT === i ? 'bg-white/5 border-white/20' : 'opacity-40 hover:opacity-100'}`}
+                  onClick={() => setActiveT(i)}
+                  data-cursor
+                >
+                  <p className="font-body text-xs font-light text-white/60 mb-6 leading-relaxed">"{t.text}"</p>
+                  <div>
+                    <p className="font-accent text-[10px] font-bold tracking-widest uppercase text-white">{t.name}</p>
+                    <p className="font-accent text-[9px] font-bold tracking-widest uppercase text-[#C8960C] mt-1">{t.grade}</p>
+                  </div>
+                </motion.div>
               ))}
             </div>
+          </div>
 
-            <div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: '1.25rem' }}>
-                <div style={{ width: 24, height: 2, background: '#7B1C2E' }} />
-                <span style={{ fontFamily: "'Montserrat', sans-serif", fontSize: '9px', fontWeight: 700, letterSpacing: '0.32em', textTransform: 'uppercase', color: '#7B1C2E' }}>Modern Learning Facilities</span>
-              </div>
-              <h2 style={{ fontFamily: "'Georgia', serif", fontSize: 'clamp(2rem, 3.5vw, 3rem)', fontWeight: 700, color: '#1a1a1a', lineHeight: 1.06, marginBottom: '1.5rem' }}>
-                A Campus Built for<br /><span style={{ color: '#7B1C2E' }}>Academic Excellence</span>
-              </h2>
-              <p style={{ fontFamily: "'Montserrat', sans-serif", fontSize: '13px', fontWeight: 300, lineHeight: 1.9, color: 'rgba(26,26,26,0.5)', marginBottom: '2rem' }}>
-                Our campus near Lake City Raiwind Road provides a quiet, distraction-free environment equipped with modern classrooms and resources.
-              </p>
-              <ul style={{ listStyle: 'none', padding: 0, margin: '0 0 2.5rem', display: 'flex', flexDirection: 'column', gap: 12 }}>
-                {[
-                  'Grade 6 to O-Level Specialised Focus',
-                  'Online &amp; Hybrid Learning Options',
-                  'Strategic Location near Raiwind Road',
-                  'Monthly Progress Reports for Parents',
-                ].map((item, i) => (
-                  <li key={i} style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-                    <div style={{ width: 6, height: 6, background: '#7B1C2E', flexShrink: 0 }} />
-                    <span
-                      style={{ fontFamily: "'Montserrat', sans-serif", fontSize: '13px', color: 'rgba(26,26,26,0.65)' }}
-                      dangerouslySetInnerHTML={{ __html: item }}
-                    />
-                  </li>
-                ))}
-              </ul>
-              <Link
-                href="/about"
-                style={{ display: 'inline-flex', alignItems: 'center', gap: 10, padding: '13px 28px', background: '#7B1C2E', color: '#fff', fontFamily: "'Montserrat', sans-serif", fontSize: '10px', fontWeight: 700, letterSpacing: '0.18em', textTransform: 'uppercase', textDecoration: 'none' }}
-              >
-                About Our Academy <ArrowRight size={13} />
-              </Link>
-            </div>
+          <div className="relative">
+             <AnimatePresence mode="wait">
+               <motion.div
+                 key={activeT}
+                 initial={{ opacity: 0, x: 20 }}
+                 animate={{ opacity: 1, x: 0 }}
+                 exit={{ opacity: 0, x: -20 }}
+                 transition={{ duration: 0.5, ease }}
+                 className="p-16 border border-white/10 relative"
+               >
+                 <span className="font-display text-[12rem] text-[#C8960C]/10 absolute -top-16 -left-4 leading-none">“</span>
+                 <p className="font-display text-4xl font-light leading-snug text-white/90 relative z-10">
+                   {TESTIMONIALS[activeT].text}
+                 </p>
+                 <div className="mt-12 flex items-center gap-6">
+                    <div className="w-16 h-16 bg-[#7B1C2E] flex items-center justify-center font-display text-2xl font-bold">{TESTIMONIALS[activeT].initials}</div>
+                    <div>
+                      <p className="font-display text-2xl font-bold">{TESTIMONIALS[activeT].name}</p>
+                      <p className="font-accent text-[10px] font-bold tracking-widest uppercase text-[#C8960C]">{TESTIMONIALS[activeT].grade}</p>
+                    </div>
+                 </div>
+               </motion.div>
+             </AnimatePresence>
           </div>
         </div>
       </section>
 
-
-      {/* ══════════════════════════════════════
-          7. SUMMER PROMO — white, bordered box
-      ══════════════════════════════════════ */}
-      <section style={{ background: '#fff', padding: '5rem 0', borderBottom: '1px solid rgba(123,28,46,0.07)' }}>
-        <div className="container mx-auto px-6 max-w-7xl">
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr auto', gap: '4rem', alignItems: 'center', border: '1px solid rgba(123,28,46,0.15)', padding: '3.5rem 3.5rem', position: 'relative', overflow: 'hidden' }}>
-            {/* Left accent bar */}
-            <div style={{ position: 'absolute', left: 0, top: 0, bottom: 0, width: 4, background: '#7B1C2E' }} />
-
-            <div style={{ paddingLeft: '1rem' }}>
-              <div style={{ fontFamily: "'Montserrat', sans-serif", fontSize: '9px', fontWeight: 700, letterSpacing: '0.32em', textTransform: 'uppercase', color: '#7B1C2E', marginBottom: '1rem' }}>
-                Starting June 2025
-              </div>
-              <h2 style={{ fontFamily: "'Georgia', serif", fontSize: 'clamp(1.8rem, 3.5vw, 2.8rem)', fontWeight: 700, color: '#1a1a1a', lineHeight: 1.06, marginBottom: '1rem' }}>
-                Summer Foundation <span style={{ color: '#7B1C2E' }}>Courses</span>
-              </h2>
-              <p style={{ fontFamily: "'Montserrat', sans-serif", fontSize: '13px', fontWeight: 300, lineHeight: 1.9, color: 'rgba(26,26,26,0.5)', marginBottom: '1.5rem', maxWidth: 480 }}>
-                Bridge the gap in <strong style={{ fontWeight: 600, color: '#1a1a1a' }}>Mathematics</strong> and <strong style={{ fontWeight: 600, color: '#1a1a1a' }}>English Language</strong> this summer. Build a strong foundation before the term begins.
-              </p>
-              <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap', marginBottom: '2rem' }}>
-                {['Mathematics', 'English Language'].map((s) => (
-                  <span key={s} style={{ display: 'inline-flex', alignItems: 'center', gap: 7, padding: '8px 14px', border: '1px solid rgba(123,28,46,0.2)', background: '#FAF7F2', fontFamily: "'Montserrat', sans-serif", fontSize: '10px', fontWeight: 600, letterSpacing: '0.14em', textTransform: 'uppercase', color: '#7B1C2E' }}>
-                    <BookOpen size={11} />
-                    {s}
-                  </span>
-                ))}
-              </div>
-              <Link
-                href="/register"
-                style={{ display: 'inline-flex', alignItems: 'center', gap: 10, padding: '13px 28px', background: '#7B1C2E', color: '#fff', fontFamily: "'Montserrat', sans-serif", fontSize: '10px', fontWeight: 700, letterSpacing: '0.18em', textTransform: 'uppercase', textDecoration: 'none' }}
-              >
-                Reserve Your Seat <ArrowRight size={13} />
-              </Link>
-            </div>
-
-            {/* Circle */}
-            <div style={{ width: 150, height: 150, border: '1px solid rgba(123,28,46,0.2)', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', textAlign: 'center', flexShrink: 0 }}>
-              <div style={{ fontFamily: "'Montserrat', sans-serif", fontSize: '8px', fontWeight: 600, letterSpacing: '0.22em', textTransform: 'uppercase', color: 'rgba(26,26,26,0.35)' }}>Starts</div>
-              <div style={{ fontFamily: "'Georgia', serif", fontSize: '2.2rem', fontWeight: 700, color: '#7B1C2E', lineHeight: 1.1 }}>June</div>
-              <div style={{ fontFamily: "'Georgia', serif", fontSize: '1.2rem', fontWeight: 700, color: 'rgba(26,26,26,0.3)', lineHeight: 1 }}>2025</div>
-            </div>
-          </div>
+      {/* ══════ CTA ══════ */}
+      <section className="bg-[#7B1C2E] py-24 relative overflow-hidden">
+        <div className="absolute top-0 right-0 w-1/2 h-full opacity-10 pointer-events-none">
+          <div className="absolute inset-0 line-grid" />
+        </div>
+        <div className="wrap flex flex-col md:flex-row items-center justify-between gap-12 relative z-10">
+          <FadeUp>
+            <p className="font-accent text-[10px] font-bold tracking-[0.3em] uppercase text-white/50 mb-4">Admissions Open — 2025</p>
+            <h2 className="font-display text-5xl font-bold text-white italic">Ready to Start Your Journey?</h2>
+          </FadeUp>
+          <FadeUp delay={0.2} className="flex gap-4">
+             <Link href="/register" className="inline-flex items-center px-12 py-5 bg-white text-[#7B1C2E] font-accent text-[11px] font-bold tracking-widest uppercase hover:bg-[#FAF7F2] transition-colors" data-cursor>
+               Enroll Now <ArrowRight size={14} className="ml-2" />
+             </Link>
+             <a href="tel:03144033054" className="inline-flex items-center px-10 py-5 border border-white/30 text-white font-accent text-[11px] font-bold tracking-widest uppercase hover:bg-white/10 transition-colors" data-cursor>
+               <Phone size={14} className="mr-2" /> Call Us
+             </a>
+          </FadeUp>
         </div>
       </section>
-
-
-      {/* ══════════════════════════════════════
-          8. CTA BAND — maroon full width
-      ══════════════════════════════════════ */}
-      <section style={{ background: '#7B1C2E', padding: '5rem 0' }}>
-        <div className="container mx-auto px-6 max-w-7xl">
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '2rem', flexWrap: 'wrap' }}>
-            <div>
-              <div style={{ fontFamily: "'Montserrat', sans-serif", fontSize: '9px', fontWeight: 600, letterSpacing: '0.32em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.35)', marginBottom: '0.75rem' }}>
-                Admissions Open — 2025
-              </div>
-              <h2 style={{ fontFamily: "'Georgia', serif", fontSize: 'clamp(1.8rem, 3vw, 2.6rem)', fontWeight: 700, color: '#fff' }}>
-                Ready to Start Your Journey?
-              </h2>
-            </div>
-            <div style={{ display: 'flex', gap: 12 }}>
-              <Link
-                href="/register"
-                style={{ display: 'inline-flex', alignItems: 'center', gap: 10, padding: '14px 28px', background: '#fff', color: '#7B1C2E', fontFamily: "'Montserrat', sans-serif", fontSize: '10px', fontWeight: 700, letterSpacing: '0.18em', textTransform: 'uppercase', textDecoration: 'none', transition: 'opacity 0.2s' }}
-              >
-                Enroll Now <ArrowRight size={13} />
-              </Link>
-              <a
-                href="tel:03144033054"
-                style={{ display: 'inline-flex', alignItems: 'center', gap: 10, padding: '14px 28px', border: '1px solid rgba(255,255,255,0.3)', color: '#fff', fontFamily: "'Montserrat', sans-serif", fontSize: '10px', fontWeight: 600, letterSpacing: '0.18em', textTransform: 'uppercase', textDecoration: 'none' }}
-              >
-                <Phone size={13} /> Call Us
-              </a>
-            </div>
-          </div>
-        </div>
-      </section>
-
     </div>
   );
 }
