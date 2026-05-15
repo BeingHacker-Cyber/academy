@@ -16,7 +16,7 @@ const EXPLORE_LINKS = [
 ];
 
 const LEGAL_LINKS = [
-  { name: 'FAQs',               href: '/#faqs'           },
+  { name: 'FAQs',               href: '/faqs'           },
   { name: 'Privacy Policy',      href: '/privacy-policy'  },
   { name: 'Terms and Conditions',href: '/terms-and-conditions' },
 ];
