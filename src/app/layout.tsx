@@ -42,6 +42,10 @@ export const metadata: Metadata = {
     template: '%s | AECS Academy',
   },
   description: siteDescription,
+  icons: {
+    icon: '/logo.png',
+    apple: '/logo.png',
+  },
   keywords: [
     'IGCSE Lahore', 'O Level academy Lahore', 'Cambridge education Pakistan', 'AECS Academy',
     'Lake City Lahore academy', 'Al Kabir Town Phase 2 tuition', 'Raiwind Road O Level',
@@ -107,7 +111,8 @@ export default function RootLayout({
       <head>
         {/* DNS prefetch */}
         <link rel="dns-prefetch" href="https://cdn.jsdelivr.net" />
-        <link rel="icon" href="/favicon.ico" sizes="any" />
+        <link rel="icon" href="/logo.png" type="image/png" />
+        <link rel="apple-touch-icon" href="/logo.png" />
       </head>
 
       <body
