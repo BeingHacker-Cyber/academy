@@ -9,6 +9,7 @@ const navLinks = [
   { name: 'About AECS',      href: '/about'    },
   { name: 'Expert Faculty',  href: '/faculty'  },
   { name: 'Student Gallery', href: '/gallery'  },
+  { name: 'Careers',         href: '/careers'  },
   { name: 'Enrollment',      href: '/register' },
   { name: 'Contact Us',      href: '/contact'  },
 ];

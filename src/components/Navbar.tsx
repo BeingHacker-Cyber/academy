@@ -8,7 +8,7 @@ import {
   useMotionValue,
   useSpring,
 } from "framer-motion";
-import { Phone, ArrowRight, Menu, X } from "lucide-react";
+import { ArrowRight, Menu, X } from "lucide-react";
 import AECSLogo from "./AECSLogo";
 
 const NAV_LINKS = [
@@ -16,6 +16,7 @@ const NAV_LINKS = [
   { name: "About",   href: "/about"   },
   { name: "Faculty", href: "/faculty" },
   { name: "Gallery", href: "/gallery" },
+  { name: "Careers", href: "/careers" },
   { name: "Contact", href: "/contact" },
 ];
 
@@ -126,12 +127,6 @@ export default function Navbar() {
               </nav>
 
               <div className="flex items-center gap-4">
-                <a 
-                  href="tel:03144033054" 
-                  className="hidden lg:flex items-center gap-2 font-accent text-[9px] font-bold tracking-widest uppercase text-black/40 hover:text-[#7B1C2E] transition-colors bg-black/5 px-4 py-2.5 rounded-full hover:bg-[#7B1C2E]/5"
-                >
-                  <Phone size={12} className="text-[#7B1C2E]" /> 0314 4033054
-                </a>
                 <div className="hidden md:block">
                    <MagneticCTA href="/register" />
                 </div>
@@ -192,9 +187,6 @@ export default function Navbar() {
                 <Link href="/register" className="w-full flex items-center justify-center gap-3 py-5 bg-[#7B1C2E] text-white font-accent text-[10px] font-bold tracking-[0.2em] uppercase rounded-full hover:shadow-lg hover:shadow-[#7B1C2E]/20 transition-all duration-300">
                   Enroll Now <ArrowRight size={14} />
                 </Link>
-                <a href="tel:03144033054" className="flex items-center justify-center gap-3 py-4 text-white/40 font-accent text-[9px] font-bold tracking-widest uppercase hover:text-white transition-all bg-white/5 rounded-full">
-                  <Phone size={12} /> 0314 4033054
-                </a>
               </div>
             </motion.aside>
           </>
